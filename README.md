@@ -1,14 +1,20 @@
-# TaxonomyMining
+# Taxonomy Mining
 
-- GraalVm with js installation: gu install js, add graal to path
+**Setup guide**
 
-- Python 3.X with scikit-learn, numpy and jep, graphviz
+* Install SrcML
 
-- Graphviz installation
+* Install graphviz
 
-- DPath environment to jep
+* Install Python 3.X with scikit-learn, numpy, jep, graphviz
 
-- javafx path, library to module path
+* Install GraalVM (tested with Java 17), use the GraalVM Updater to install graaljs (gu install js)
 
-- srcml
+* Download JavaFX and add the lib folder to the java_path environment variable
+
+* Set vm option -Djava.library.path to your jep package path
+
+* Set vm option --module-path and --add-modules to your JavaFX lib path
+
+
 
