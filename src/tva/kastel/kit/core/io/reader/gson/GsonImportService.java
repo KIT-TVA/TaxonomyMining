@@ -3,7 +3,6 @@ package tva.kastel.kit.core.io.reader.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import tva.kastel.kit.core.model.impl.TreeImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;

@@ -1,9 +1,9 @@
 package tva.kastel.kit.core.model.interfaces;
 
+import tva.kastel.kit.core.model.configuration.Configuration;
+
 import java.io.Serializable;
 import java.util.List;
-
-import tva.kastel.kit.core.model.configuration.Configuration;
 
 public interface Tree extends Serializable {
     public List<Configuration> getConfigurations();

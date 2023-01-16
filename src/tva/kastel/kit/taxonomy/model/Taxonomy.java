@@ -1,11 +1,11 @@
 package tva.kastel.kit.taxonomy.model;
 
 import com.google.common.collect.Lists;
-import tva.kastel.kit.core.model.interfaces.Tree;
 import org.logicng.formulas.Formula;
 import org.logicng.formulas.FormulaFactory;
 import org.logicng.formulas.Variable;
 import org.logicng.transformations.cnf.BDDCNFTransformation;
+import tva.kastel.kit.core.model.interfaces.Tree;
 
 import java.util.ArrayList;
 import java.util.HashMap;

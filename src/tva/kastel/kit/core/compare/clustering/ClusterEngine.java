@@ -1,12 +1,10 @@
 package tva.kastel.kit.core.compare.clustering;
 
 
-import tva.kastel.kit.core.compare.CompareEngineHierarchical;
-import tva.kastel.kit.core.compare.matcher.SortingMatcher;
 import jep.Interpreter;
 import jep.NDArray;
 import jep.SharedInterpreter;
-import tva.kastel.kit.core.model.interfaces.Node;
+import tva.kastel.kit.core.compare.CompareEngineHierarchical;
 import tva.kastel.kit.core.model.interfaces.Tree;
 
 import java.util.*;

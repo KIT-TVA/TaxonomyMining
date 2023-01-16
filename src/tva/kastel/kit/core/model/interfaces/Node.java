@@ -1,11 +1,11 @@
 package tva.kastel.kit.core.model.interfaces;
 
-import java.util.List;
-import java.util.UUID;
-
 import tva.kastel.kit.core.model.configuration.Configuration;
 import tva.kastel.kit.core.model.enums.NodeType;
 import tva.kastel.kit.core.model.enums.VariabilityClass;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * This interfaces defines all methods that are needed to realize a node.

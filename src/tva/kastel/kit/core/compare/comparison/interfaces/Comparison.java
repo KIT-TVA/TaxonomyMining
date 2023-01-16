@@ -1,13 +1,13 @@
 package tva.kastel.kit.core.compare.comparison.interfaces;
 
+import tva.kastel.kit.core.compare.comparator.interfaces.ResultElement;
+import tva.kastel.kit.core.compare.comparison.util.ComparisonUtil;
+import tva.kastel.kit.core.model.impl.Pair;
+import tva.kastel.kit.core.model.interfaces.Node;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import tva.kastel.kit.core.compare.comparator.interfaces.ResultElement;
-import tva.kastel.kit.core.compare.comparison.util.ComparisonUtil;
-import tva.kastel.kit.core.model.interfaces.Node;
-import tva.kastel.kit.core.model.impl.Pair;
 
 /**
  * A data structure for the storage of the comparison results between two

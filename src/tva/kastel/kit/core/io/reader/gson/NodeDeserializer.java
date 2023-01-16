@@ -1,17 +1,6 @@
 package tva.kastel.kit.core.io.reader.gson;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-
+import com.google.gson.*;
 import tva.kastel.kit.core.model.enums.NodeType;
 import tva.kastel.kit.core.model.enums.VariabilityClass;
 import tva.kastel.kit.core.model.impl.AttributeImpl;
@@ -19,6 +8,11 @@ import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Value;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class NodeDeserializer implements JsonDeserializer<Node> {
 

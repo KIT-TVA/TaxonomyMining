@@ -1,31 +1,27 @@
 package tva.kastel.kit.core.io.reader.cpp;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.ProcessBuilder.Redirect;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import com.google.common.io.Files;
-import org.apache.commons.io.IOUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-
+import tva.kastel.kit.core.io.reader.AbstractArtifactReader;
+import tva.kastel.kit.core.io.reader.cpp.adjust.AdjustAll;
 import tva.kastel.kit.core.model.enums.NodeType;
 import tva.kastel.kit.core.model.impl.AttributeImpl;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.impl.TreeImpl;
-import tva.kastel.kit.core.io.reader.AbstractArtifactReader;
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
-import tva.kastel.kit.core.io.reader.cpp.adjust.AdjustAll;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.ProcessBuilder.Redirect;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 public class SrcMLReader extends AbstractArtifactReader {

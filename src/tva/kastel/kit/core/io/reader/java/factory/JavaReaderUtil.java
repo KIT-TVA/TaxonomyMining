@@ -1,8 +1,8 @@
 package tva.kastel.kit.core.io.reader.java.factory;
 
-import java.util.HashSet;
-
 import tva.kastel.kit.core.io.reader.java.AccessModifier;
+
+import java.util.HashSet;
 
 public class JavaReaderUtil {
 

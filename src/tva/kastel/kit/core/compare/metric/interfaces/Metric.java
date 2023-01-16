@@ -1,10 +1,10 @@
 package tva.kastel.kit.core.compare.metric.interfaces;
 
+import tva.kastel.kit.core.compare.comparator.interfaces.Comparator;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import tva.kastel.kit.core.compare.comparator.interfaces.Comparator;
 
 public interface Metric extends Serializable {
 

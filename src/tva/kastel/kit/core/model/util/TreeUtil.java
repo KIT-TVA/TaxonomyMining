@@ -1,10 +1,10 @@
 package tva.kastel.kit.core.model.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

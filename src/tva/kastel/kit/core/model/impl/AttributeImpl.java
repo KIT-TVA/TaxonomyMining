@@ -1,10 +1,10 @@
 package tva.kastel.kit.core.model.impl;
 
-import java.util.List;
-
 import tva.kastel.kit.core.model.interfaces.AbstractAttribute;
 import tva.kastel.kit.core.model.interfaces.Attribute;
 import tva.kastel.kit.core.model.interfaces.Value;
+
+import java.util.List;
 
 /**
  * Concrete implementation of the Attribute interface.

@@ -1,13 +1,21 @@
 package tva.kastel.kit.core.io.reader.cpp.adjust;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * This class contains only constants used for the adjustment of cpp Node Types
  *
  * @author David Bumm
  */
 public class Const {
-    public static final String CPP = "JAVA"; //TODO change this to cpp
+    public static final String C_PLUS_PLUS = "JAVA"; //TODO change this to cpp
+    public static final String PY = "py";
+    public static final String PYTHON = "Python";
+    public static final String CPP = "cpp";
     public static final String IS_INTERFACE = "IsInterface";
+    public static final String ACCESS_MODIFIER = "AccessModifier";
+
 
     public static final String VALUE = "Value";
 
@@ -69,7 +77,11 @@ public class Const {
     public static final String CALL = "call";
     public static final String SPECIFIER = "Specifier";
     public static final String TYPEDEF = "typedef";
-
+    public static final String SUPER = "Super";
+    public static final String CLASS = "Class";
+    public static final String SUPER_CLASS = "Super Class";
+    public static final String PRIVATE = "private";
+    public static final String PUBLIC = "public";
 
     //illegal Strings
     public static final String T = "\t";
@@ -89,6 +101,7 @@ public class Const {
     public static final String BRACKET_SQUARED = "[]";
     public static final String LINE_BREAK = "\n";
     public static final String EQ = "=";
+    public static final String UNDERSCORE = "_";
 
 
     //operators
@@ -187,4 +200,16 @@ public class Const {
     public static final String PARAM = "parameter";
     public static final String PARAM_LIST = "parameter_list";
     public static final String FUNCTION = "function";
+
+
+    //Python
+    public static final String BACKSLASH = "\\";
+    public static final String QUOTATION = "\"";
+    public static final String _TYPE = "_type";
+
+    //Baned Python String
+    public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno", "level", "lineno", "n", "s");
+    public static final List<String> BANED_NODES = Arrays.asList("ctx", "type_ignores", "decorator_list", "defaults", "kw_defaults", "kwonlyargs", "posonlyargs", "Load", "Store", "keywords");
+
+
 }

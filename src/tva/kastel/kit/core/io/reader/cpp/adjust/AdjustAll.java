@@ -1,5 +1,6 @@
 package tva.kastel.kit.core.io.reader.cpp.adjust;
 
+
 import tva.kastel.kit.core.model.impl.AttributeImpl;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
@@ -16,92 +17,99 @@ import java.util.ArrayList;
  * @author David Bumm
  */
 public final class AdjustAll extends TreeAdjuster {
-	private Node rootNode;
+    private Node rootNode;
 
-	public AdjustAll(Node rootNode) {
-		this.rootNode = rootNode;
-	}
+    public AdjustAll(Node rootNode) {
+        this.rootNode = rootNode;
+    }
 
-	public Node adjustAllNodes() {
-		if (rootNode == null) {
-			return null;
-		}
+    public Node adjustAllNodes() {
+        if (rootNode == null) {
+            return null;
+        }
 
-		Node node = new NodeImpl(Const.CPP);
-		node.addChildWithParent(rootNode);
-		rootNode.addAttribute(new AttributeImpl(Const.IS_INTERFACE, new StringValueImpl(Const.FALSE)));
-		//TODO implement this correctly: rootNode.addAttribute(new AttributeImpl("AccessModifier", new StringValueImpl("PUBLIC")));
+        Node node = new NodeImpl(Const.C_PLUS_PLUS);
+        node.addChildWithParent(rootNode);
+        rootNode.addAttribute(new AttributeImpl(Const.IS_INTERFACE, new StringValueImpl(Const.FALSE)));
 
-		TreeAdjuster arrAdjuster = new AdjustArray();
-		arrAdjuster.recursiveAdjust(rootNode);
+        TreeAdjuster arrAdjuster = new AdjustArray();
+        arrAdjuster.recursiveAdjust(rootNode);
 
-		TreeAdjuster assignAdjuster = new AdjustAssignment();
-		assignAdjuster.recursiveAdjust(rootNode);
+        TreeAdjuster assignAdjuster = new AdjustAssignment();
+        assignAdjuster.recursiveAdjust(rootNode);
 
-		TreeAdjuster opAdjuster = new AdjustOperator();
-		opAdjuster.recursiveAdjust(rootNode);
+        TreeAdjuster opAdjuster = new AdjustOperator();
+        opAdjuster.recursiveAdjust(rootNode);
 
-		TreeAdjuster literalAdjuster = new AdjustLiterals();
-		literalAdjuster.recursiveAdjust(rootNode);
+        TreeAdjuster literalAdjuster = new AdjustLiterals();
+        literalAdjuster.recursiveAdjust(rootNode);
 
-		TreeAdjuster nameAdjuster = new AdjustName();
-		nameAdjuster.recursiveAdjust(rootNode);
+        TreeAdjuster methodAdjuster = new AdjustMethodCall();
+        methodAdjuster.recursiveAdjust(rootNode);
 
-		recursiveAdjust(rootNode);
+        TreeAdjuster nameAdjuster = new AdjustName();
+        nameAdjuster.recursiveAdjust(rootNode);
 
-		TreeAdjuster methodAdjuster = new AdjustMethodCall();
-		methodAdjuster.recursiveAdjust(rootNode);
+        recursiveAdjust(rootNode);
 
-		TreeAdjuster conAdjuster = new AdjustConditon();
-		conAdjuster.recursiveAdjust(rootNode);
+        TreeAdjuster conAdjuster = new AdjustConditon();
+        conAdjuster.recursiveAdjust(rootNode);
 
-		TreeAdjuster renameAdjuster = new AdjustRename();
-		renameAdjuster.recursiveAdjust(rootNode);
+        TreeAdjuster renameAdjuster = new AdjustRename();
+        renameAdjuster.recursiveAdjust(rootNode);
 
-		TreeAdjuster specAdjuster = new AdjustSpecifier();
-		specAdjuster.recursiveAdjust(rootNode);
+        TreeAdjuster superAdjuster = new AdjustSuperClass();
+        superAdjuster.recursiveAdjust(rootNode); //should happen before AdjustSpecifier, or AccessModifier gets lost
 
-		return node;
-	}
-
-	@Override
-	protected void adjust(Node node, Node parent, String nodeType) {
-		if (nodeType.equals(Const.CONTROL) || nodeType.equals(Const.BODY) && (parent.getNodeType().equals(Const.ENUM_DECLARATION)
-				|| (parent.getNodeType().equals(Const.BODY)))) {
-			node.cutWithoutChildren();
-		}
-		if (nodeType.equals(Const.FIELD_DECL) // enum edge case
-				&& parent.getNodeType().equals(Const.ENUM_DECLARATION)) {
-			node.setNodeType(Const.ENUM_CONST_DECL);
-		}
-		if (nodeType.equals(Const.FIELD_DECL) && parent.getNodeType().equals(Const.ARGUMENT_BIG)) {
-			node.setNodeType(Const.ARGUMENT_BIG);
-			parent.cutWithoutChildren();
-		}
+        TreeAdjuster specAdjuster = new AdjustSpecifier();
+        specAdjuster.recursiveAdjust(rootNode);
 
 
-		TreeAdjuster forAdjuster = new AdjustForLoop();
-		forAdjuster.adjust(node, parent, nodeType);
+        return node;
+    }
+
+    @Override
+    protected void adjust(Node node, Node parent, String nodeType) {
+        if (nodeType.equals(Const.CONTROL) || nodeType.equals(Const.BODY) && (parent.getNodeType().equals(Const.ENUM_DECLARATION)
+                || (parent.getNodeType().equals(Const.BODY)))) {
+            node.cutWithoutChildren();
+        }
+        if (nodeType.equals(Const.FIELD_DECL) // enum edge case
+                && parent.getNodeType().equals(Const.ENUM_DECLARATION)) {
+            node.setNodeType(Const.ENUM_CONST_DECL);
+        }
+        if (nodeType.equals(Const.FIELD_DECL) && parent.getNodeType().equals(Const.ARGUMENT_BIG)) {
+            node.setNodeType(Const.ARGUMENT_BIG);
+            parent.cutWithoutChildren();
+        }
+
+        if ((nodeType.equals(Const.PRIVATE) || nodeType.equals(Const.PUBLIC)) && node.getAttributes().isEmpty()) {
+            node.cut();
+        }
 
 
-		if (nodeType.equals(Const.RETURN_STMT) && node.getChildren().size() > 0) {
-			node.setAttributes(new ArrayList<Attribute>());
-			if (node.getChildren().get(0).getNodeType().equals(Const.EXPR)) {
-				node.getChildren().get(0).cutWithoutChildren();
-			}
-		}
-
-		TreeAdjuster ifAdjuster = new AdjustIfCase();
-		ifAdjuster.adjust(node, parent, nodeType);
-
-		TreeAdjuster switchAdjuster = new AdjustSwitchCase();
-		switchAdjuster.adjust(node, parent, nodeType);
+        TreeAdjuster forAdjuster = new AdjustForLoop();
+        forAdjuster.adjust(node, parent, nodeType);
 
 
-		TreeAdjuster commentAdjuster = new AdjustComment();
-		commentAdjuster.adjust(node, parent, nodeType);
+        if (nodeType.equals(Const.RETURN_STMT) && node.getChildren().size() > 0) {
+            node.setAttributes(new ArrayList<Attribute>());
+            if (node.getChildren().get(0).getNodeType().equals(Const.EXPR)) {
+                node.getChildren().get(0).cutWithoutChildren();
+            }
+        }
+
+        TreeAdjuster ifAdjuster = new AdjustIfCase();
+        ifAdjuster.adjust(node, parent, nodeType);
+
+        TreeAdjuster switchAdjuster = new AdjustSwitchCase();
+        switchAdjuster.adjust(node, parent, nodeType);
 
 
-	}
+        TreeAdjuster commentAdjuster = new AdjustComment();
+        commentAdjuster.adjust(node, parent, nodeType);
+
+
+    }
 
 }

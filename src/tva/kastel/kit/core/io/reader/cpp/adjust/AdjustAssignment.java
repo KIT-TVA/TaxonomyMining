@@ -1,12 +1,12 @@
 package tva.kastel.kit.core.io.reader.cpp.adjust;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import tva.kastel.kit.core.model.impl.AttributeImpl;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is a sub class of TreeAdjuster.

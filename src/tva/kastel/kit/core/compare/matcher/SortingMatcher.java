@@ -1,14 +1,14 @@
 package tva.kastel.kit.core.compare.matcher;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
 import tva.kastel.kit.core.compare.matcher.interfaces.AbstractMatcher;
 import tva.kastel.kit.core.compare.matcher.util.AbstractArtifactFactory;
 import tva.kastel.kit.core.compare.matcher.util.ArtifactFactory;
 import tva.kastel.kit.core.model.interfaces.Node;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class SortingMatcher extends AbstractMatcher {
     private final double THRESHOLD = 0.4f;

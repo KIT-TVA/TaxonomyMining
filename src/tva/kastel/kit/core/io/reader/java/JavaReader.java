@@ -1,27 +1,26 @@
 package tva.kastel.kit.core.io.reader.java;
 
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import tva.kastel.kit.core.io.reader.AbstractArtifactReader;
+import tva.kastel.kit.core.io.reader.java.factory.NodeFactory;
+import tva.kastel.kit.core.io.reader.java.factory.StatementNodeFactory;
+import tva.kastel.kit.core.model.enums.NodeType;
+import tva.kastel.kit.core.model.impl.AttributeImpl;
+import tva.kastel.kit.core.model.impl.NodeImpl;
+import tva.kastel.kit.core.model.impl.StringValueImpl;
+import tva.kastel.kit.core.model.impl.TreeImpl;
+import tva.kastel.kit.core.model.interfaces.Attribute;
+import tva.kastel.kit.core.model.interfaces.Node;
+import tva.kastel.kit.core.model.interfaces.Tree;
+import tva.kastel.kit.core.model.interfaces.Value;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.github.javaparser.StaticJavaParser;
-import com.github.javaparser.ast.CompilationUnit;
-
-import tva.kastel.kit.core.model.enums.NodeType;
-import tva.kastel.kit.core.model.impl.AttributeImpl;
-import tva.kastel.kit.core.model.impl.NodeImpl;
-import tva.kastel.kit.core.model.impl.StringValueImpl;
-import tva.kastel.kit.core.model.impl.TreeImpl;
-import tva.kastel.kit.core.io.reader.AbstractArtifactReader;
-import tva.kastel.kit.core.model.interfaces.Attribute;
-import tva.kastel.kit.core.model.interfaces.Node;
-import tva.kastel.kit.core.model.interfaces.Tree;
-import tva.kastel.kit.core.io.reader.java.factory.NodeFactory;
-import tva.kastel.kit.core.io.reader.java.factory.StatementNodeFactory;
-import tva.kastel.kit.core.model.interfaces.Value;
 
 /***
  * This reader converts java files into the generic data structure.

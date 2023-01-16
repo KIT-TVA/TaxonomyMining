@@ -1,10 +1,10 @@
 package tva.kastel.kit.core.compare.comparator.impl.node;
 
-import java.util.Map;
-
 import tva.kastel.kit.core.compare.comparator.interfaces.Comparator;
 import tva.kastel.kit.core.compare.comparator.templates.AbstractResultElement;
 import tva.kastel.kit.core.model.interfaces.Node;
+
+import java.util.Map;
 
 /**
  * A concrete class that stores the comparison information of a comparator.

@@ -1,21 +1,15 @@
 package tva.kastel.kit.taxonomy;
 
 
-import tva.kastel.kit.core.compare.comparison.impl.ComparisonLevel;
 import tva.kastel.kit.core.io.reader.ReaderManager;
-import tva.kastel.kit.core.io.reader.java.JavaReader;
-import tva.kastel.kit.core.io.reader.java.JavaVisitor;
 import tva.kastel.kit.core.io.writer.dimacs.DimacsWriter;
 import tva.kastel.kit.core.io.writer.gson.GsonExportService;
 import tva.kastel.kit.core.io.writer.taxonomy.TaxonomyWriter;
-import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.taxonomy.mining.TaxonomyMiner;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
 
 import java.io.File;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -65,7 +59,7 @@ public class Main {
 
         for (File file : files) {
             Tree tree = readerManager.readFile(file);
-     
+
             trees.add(tree);
         }
 

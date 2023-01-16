@@ -1,14 +1,11 @@
 package tva.kastel.kit.taxonomy.mining;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
 import tva.kastel.kit.core.compare.clustering.ClusterEngine;
 import tva.kastel.kit.core.compare.comparison.impl.VariationComparisonFactory;
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
-import tva.kastel.kit.core.compare.matcher.util.VariationFactory;
 import tva.kastel.kit.core.compare.matcher.SortingMatcher;
+import tva.kastel.kit.core.compare.matcher.util.VariationFactory;
 import tva.kastel.kit.core.compare.metric.MetricImpl;
 import tva.kastel.kit.core.model.enums.VariabilityClass;
 import tva.kastel.kit.core.model.interfaces.Node;
@@ -17,6 +14,9 @@ import tva.kastel.kit.taxonomy.model.Taxonomy;
 import tva.kastel.kit.taxonomy.model.TaxonomyEdge;
 import tva.kastel.kit.taxonomy.model.TaxonomyFeature;
 import tva.kastel.kit.taxonomy.model.TaxonomyNode;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class TaxonomyMiner {
 

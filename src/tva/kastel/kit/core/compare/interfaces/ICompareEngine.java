@@ -1,13 +1,13 @@
 package tva.kastel.kit.core.compare.interfaces;
 
-import java.util.List;
-
 import tva.kastel.kit.core.compare.comparator.interfaces.Comparator;
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
-import tva.kastel.kit.core.model.interfaces.Node;
-import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.core.compare.matcher.interfaces.Matcher;
 import tva.kastel.kit.core.compare.metric.interfaces.Metric;
+import tva.kastel.kit.core.model.interfaces.Node;
+import tva.kastel.kit.core.model.interfaces.Tree;
+
+import java.util.List;
 
 public interface ICompareEngine<Type> {
 

@@ -9,14 +9,13 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.nodeTypes.NodeWithArguments;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.ReferenceType;
-
+import tva.kastel.kit.core.io.reader.java.JavaAttributesTypes;
+import tva.kastel.kit.core.io.reader.java.JavaNodeTypes;
+import tva.kastel.kit.core.io.reader.java.JavaVisitor;
 import tva.kastel.kit.core.model.enums.NodeType;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
-import tva.kastel.kit.core.io.reader.java.JavaAttributesTypes;
-import tva.kastel.kit.core.io.reader.java.JavaNodeTypes;
-import tva.kastel.kit.core.io.reader.java.JavaVisitor;
 
 /**
  * This class contains method for the transformation of java parser nodes into a

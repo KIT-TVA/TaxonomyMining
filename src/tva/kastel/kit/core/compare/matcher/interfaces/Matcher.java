@@ -1,9 +1,9 @@
 package tva.kastel.kit.core.compare.matcher.interfaces;
 
-import java.util.List;
-
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
 import tva.kastel.kit.core.model.interfaces.Node;
+
+import java.util.List;
 
 public interface Matcher {
 

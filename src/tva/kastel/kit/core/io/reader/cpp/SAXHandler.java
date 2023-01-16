@@ -1,19 +1,18 @@
 package tva.kastel.kit.core.io.reader.cpp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
+import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
+import tva.kastel.kit.core.io.reader.cpp.adjust.RenamerCpp;
 import tva.kastel.kit.core.model.impl.AttributeImpl;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Attribute;
 import tva.kastel.kit.core.model.interfaces.Node;
-import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
-import tva.kastel.kit.core.io.reader.cpp.adjust.RenamerCpp;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class SAXHandler extends AbstractSAXHandler {
 
@@ -85,6 +84,11 @@ public class SAXHandler extends AbstractSAXHandler {
     private void addNameAttribute(Node node, Attribute attribute) {
         Node next = node;
         while (next != null && next.getParent() != null && next.getNodeType().equals(Const.NAME_BIG)) {
+            for (Attribute a : next.getParent().getAttributes()) {
+                if (a.getAttributeKey().equals(Const.NAME_BIG)) {
+                    return;
+                }
+            }
             next.getParent().addAttribute(attribute);
             next = next.getParent();
         }

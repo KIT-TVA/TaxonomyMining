@@ -5,14 +5,13 @@ import com.github.javaparser.ast.stmt.ForEachStmt;
 import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.Statement;
-
+import tva.kastel.kit.core.io.reader.java.JavaAttributesTypes;
+import tva.kastel.kit.core.io.reader.java.JavaNodeTypes;
+import tva.kastel.kit.core.io.reader.java.JavaVisitor;
 import tva.kastel.kit.core.model.enums.NodeType;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
-import tva.kastel.kit.core.io.reader.java.JavaAttributesTypes;
-import tva.kastel.kit.core.io.reader.java.JavaNodeTypes;
-import tva.kastel.kit.core.io.reader.java.JavaVisitor;
 
 public class StatementNodeFactory implements IStatementNodeFactory {
 

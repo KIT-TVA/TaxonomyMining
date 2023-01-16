@@ -1,9 +1,9 @@
 package tva.kastel.kit.core.model.interfaces;
 
-import java.util.List;
-
 import tva.kastel.kit.core.model.configuration.Configuration;
 import tva.kastel.kit.core.model.util.TreeUtil;
+
+import java.util.List;
 
 public abstract class AbstractTree implements Tree {
     private static final long serialVersionUID = 7659681319811210012L;

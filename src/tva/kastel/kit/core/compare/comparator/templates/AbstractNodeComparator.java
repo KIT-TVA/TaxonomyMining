@@ -1,9 +1,9 @@
 package tva.kastel.kit.core.compare.comparator.templates;
 
-import java.io.Serializable;
-
 import tva.kastel.kit.core.compare.comparator.interfaces.Comparator;
 import tva.kastel.kit.core.model.interfaces.Node;
+
+import java.io.Serializable;
 
 /**
  * This class serves as template for node comparator

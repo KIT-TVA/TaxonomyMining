@@ -7,11 +7,11 @@ import tva.kastel.kit.core.model.interfaces.Attribute;
 import tva.kastel.kit.core.model.interfaces.Node;
 
 /**
- * This class is a sub class of TreeAdjuster.
- * It adjusts everything that has to do with arrays. This class covers normal array accesses (e.g arr[i])
- * just like expressions inside array accesses (e.g arr(i * j + 5)).
- * It also can handle multidimensional arrays (like arr[i][j][k]).
- * It is initially called by AdjustAll.
+ * This class is a sub class of TreeAdjuster. It adjusts everything that has to
+ * do with arrays. This class covers normal array accesses (e.g arr[i]) just
+ * like expressions inside array accesses (e.g arr(i * j + 5)). It also can
+ * handle multidimensional arrays (like arr[i][j][k]). It is initially called by
+ * AdjustAll.
  *
  * @author David Bumm
  */
@@ -50,7 +50,7 @@ public class AdjustArray extends TreeAdjuster {
                 }
                 try {
                     addArrayAccessExpr(node, parent.getParent(), parent.cut());
-                } catch (IndexOutOfBoundsException e) {
+                } catch (ArrayIndexOutOfBoundsException e) {
                     return; // node already has been cut
                 }
             }
@@ -76,7 +76,11 @@ public class AdjustArray extends TreeAdjuster {
             for (int i = 0; i < length; i++) {
                 Node n = node.getChildren().get(0);
                 if (!n.getChildren().isEmpty()) {
-                    n.getChildren().get(0).getAttributeForKey(Const.NAME_BIG).setAttributeKey(Const.VALUE);
+                    try {
+                        n.getChildren().get(0).getAttributeForKey(Const.NAME_BIG).setAttributeKey(Const.VALUE);
+                    } catch (NullPointerException e) {
+                        // ignore, because there is just no attribute with key == "Name"
+                    }
                 }
                 n.cutWithoutChildren();
             }
@@ -88,7 +92,12 @@ public class AdjustArray extends TreeAdjuster {
         Node exprNode = node.getChildren().get(0);
         String value = Const.EMPTY;
         for (Node child : exprNode.getChildren()) {
-            value += child.getAttributeForKey(Const.NAME_BIG).getAttributeValues().get(0).getValue().toString() + Const.SPACE;
+            try {
+                value += child.getAttributeForKey(Const.NAME_BIG).getAttributeValues().get(0).getValue().toString()
+                        + Const.SPACE;
+            } catch (NullPointerException e) {
+                // ignore, because there is just no attribute with key == "Name"
+            }
         }
         value = value.trim();
         String name = node.getParent().getValueAt(0);

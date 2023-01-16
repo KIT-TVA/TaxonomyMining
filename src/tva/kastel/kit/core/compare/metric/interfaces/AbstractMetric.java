@@ -1,11 +1,11 @@
 package tva.kastel.kit.core.compare.metric.interfaces;
 
+import tva.kastel.kit.core.compare.comparator.interfaces.Comparator;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import tva.kastel.kit.core.compare.comparator.interfaces.Comparator;
 
 
 public class AbstractMetric implements Metric {

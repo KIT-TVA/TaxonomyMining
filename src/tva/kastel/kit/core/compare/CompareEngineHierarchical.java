@@ -1,23 +1,22 @@
 package tva.kastel.kit.core.compare;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import tva.kastel.kit.core.compare.comparator.impl.node.NodeResultElement;
 import tva.kastel.kit.core.compare.comparator.impl.node.StringComparator;
 import tva.kastel.kit.core.compare.comparator.interfaces.Comparator;
 import tva.kastel.kit.core.compare.comparator.interfaces.ResultElement;
 import tva.kastel.kit.core.compare.comparison.impl.AbstractComparisonFactory;
 import tva.kastel.kit.core.compare.comparison.impl.NodeComparisonFactory;
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
-import tva.kastel.kit.core.model.impl.TreeImpl;
-import tva.kastel.kit.core.model.interfaces.Node;
-import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.core.compare.interfaces.ICompareEngine;
 import tva.kastel.kit.core.compare.matcher.interfaces.Matcher;
 import tva.kastel.kit.core.compare.metric.interfaces.Metric;
 import tva.kastel.kit.core.model.impl.Pair;
+import tva.kastel.kit.core.model.impl.TreeImpl;
+import tva.kastel.kit.core.model.interfaces.Node;
+import tva.kastel.kit.core.model.interfaces.Tree;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Decomposes two trees and compares , match and merges them hierarchical which

@@ -1,11 +1,11 @@
 package tva.kastel.kit.core.model.impl;
 
+import tva.kastel.kit.core.model.interfaces.Node;
+
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
-
-import tva.kastel.kit.core.model.interfaces.Node;
 
 /**
  * An Iterator for the e4cf Node interface.

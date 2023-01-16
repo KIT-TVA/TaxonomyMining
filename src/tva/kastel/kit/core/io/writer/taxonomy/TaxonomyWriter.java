@@ -8,7 +8,6 @@ import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import tva.kastel.kit.core.io.writer.dimacs.DimacsWriter;
 import tva.kastel.kit.core.io.writer.gson.GsonExportService;
-import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
 import tva.kastel.kit.taxonomy.model.TaxonomyEdge;
 import tva.kastel.kit.taxonomy.model.TaxonomyNode;

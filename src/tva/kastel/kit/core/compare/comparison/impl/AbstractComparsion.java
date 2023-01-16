@@ -1,10 +1,10 @@
 package tva.kastel.kit.core.compare.comparison.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import tva.kastel.kit.core.compare.comparator.interfaces.ResultElement;
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractComparsion<Type> implements Comparison<Type> {
     private static final long serialVersionUID = -2653313078560352977L;

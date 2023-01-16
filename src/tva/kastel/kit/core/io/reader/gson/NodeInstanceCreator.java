@@ -1,11 +1,10 @@
 package tva.kastel.kit.core.io.reader.gson;
 
-import java.lang.reflect.Type;
-
 import com.google.gson.InstanceCreator;
-
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.interfaces.AbstractNode;
+
+import java.lang.reflect.Type;
 
 public class NodeInstanceCreator implements InstanceCreator<AbstractNode> {
     /**

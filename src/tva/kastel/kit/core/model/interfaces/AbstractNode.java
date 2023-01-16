@@ -5,15 +5,8 @@ import tva.kastel.kit.core.model.enums.NodeType;
 import tva.kastel.kit.core.model.enums.VariabilityClass;
 import tva.kastel.kit.core.model.impl.AttributeImpl;
 import tva.kastel.kit.core.model.impl.NodeIterator;
-import tva.kastel.kit.core.model.interfaces.Attribute;
-import tva.kastel.kit.core.model.interfaces.Node;
-import tva.kastel.kit.core.model.interfaces.Value;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 public abstract class AbstractNode implements Node {

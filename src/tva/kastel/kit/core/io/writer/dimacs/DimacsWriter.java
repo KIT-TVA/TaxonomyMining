@@ -1,10 +1,7 @@
 package tva.kastel.kit.core.io.writer.dimacs;
 
-import tva.kastel.kit.core.io.writer.gson.GsonExportService;
 import org.logicng.formulas.Formula;
 import org.logicng.io.writers.FormulaDimacsFileWriter;
-import tva.kastel.kit.taxonomy.model.TaxonomyEdge;
-import tva.kastel.kit.taxonomy.model.TaxonomyNode;
 
 import java.io.File;
 import java.io.FileWriter;

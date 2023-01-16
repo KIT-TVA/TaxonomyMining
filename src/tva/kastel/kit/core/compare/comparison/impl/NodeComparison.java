@@ -1,18 +1,13 @@
 package tva.kastel.kit.core.compare.comparison.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
 import tva.kastel.kit.core.compare.comparison.util.ComparisonUtil;
+import tva.kastel.kit.core.model.impl.Pair;
 import tva.kastel.kit.core.model.interfaces.Attribute;
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Value;
-import tva.kastel.kit.core.model.impl.Pair;
+
+import java.util.*;
 
 /**
  * The implementation for the comparison of artifacts of type Node.

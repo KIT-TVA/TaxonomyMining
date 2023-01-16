@@ -1,14 +1,14 @@
 package tva.kastel.kit.core.compare.comparator.impl.node;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import tva.kastel.kit.core.compare.comparator.interfaces.Comparator;
 import tva.kastel.kit.core.compare.comparator.templates.AbstractNodeComparator;
 import tva.kastel.kit.core.model.interfaces.Attribute;
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Value;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StringComparator extends AbstractNodeComparator {
     double keyValueRatio = 0.4f;

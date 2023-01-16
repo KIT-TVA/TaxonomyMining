@@ -2,22 +2,16 @@ package tva.kastel.kit.core.io.reader.java.templates;
 
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.PatternExpr;
-import com.github.javaparser.ast.modules.ModuleDeclaration;
-import com.github.javaparser.ast.modules.ModuleExportsDirective;
-import com.github.javaparser.ast.modules.ModuleOpensDirective;
-import com.github.javaparser.ast.modules.ModuleProvidesDirective;
-import com.github.javaparser.ast.modules.ModuleRequiresDirective;
-import com.github.javaparser.ast.modules.ModuleUsesDirective;
+import com.github.javaparser.ast.modules.*;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.LabeledStmt;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
+import tva.kastel.kit.core.io.reader.java.JavaAttributesTypes;
+import tva.kastel.kit.core.io.reader.java.JavaNodeTypes;
 import tva.kastel.kit.core.model.enums.NodeType;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
-import tva.kastel.kit.core.io.reader.java.JavaAttributesTypes;
-import tva.kastel.kit.core.io.reader.java.JavaNodeTypes;
 
 public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
 

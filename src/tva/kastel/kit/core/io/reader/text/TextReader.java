@@ -1,17 +1,17 @@
 package tva.kastel.kit.core.io.reader.text;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
+import tva.kastel.kit.core.io.reader.AbstractArtifactReader;
 import tva.kastel.kit.core.model.enums.NodeType;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.impl.TreeImpl;
-import tva.kastel.kit.core.io.reader.AbstractArtifactReader;
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 /***
