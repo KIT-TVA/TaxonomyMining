@@ -1,11 +1,7 @@
 package tva.kastel.kit.taxonomy.mining;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
 import tva.kastel.kit.core.compare.clustering.ClusterEngine;
@@ -41,7 +37,6 @@ public class TaxonomyMiner {
 
     public Taxonomy mine(List<Tree> variants) {
 
-
         CompareEngineHierarchical compareEngine = new CompareEngineHierarchical(new SortingMatcher(new VariationFactory()),
                 new MetricImpl(""), new VariationComparisonFactory());
 
@@ -58,6 +53,9 @@ public class TaxonomyMiner {
             cloneMap.put(variant, variant.cloneTree());
         }
         do {
+
+            targets.sort(Comparator.comparing(Tree::getTreeName));
+
             clusterEngine.setThreshold(findSlidingThreshold(targets));
 
             clusters = clusterEngine.detectClusters(targets);
@@ -80,6 +78,9 @@ public class TaxonomyMiner {
 
                     List<Tree> treeList = new ArrayList<Tree>();
                     treeList.addAll(cluster);
+
+                    treeList.sort(Comparator.comparing(Tree::getTreeName));
+
                     Tree mergedTree = compareEngine.compareMerge(treeList);
                     mergedTree.setTreeName("Abstraction_" + treeCount);
                     System.out.println("Abstraction: " + mergedTree.getTreeName());
@@ -158,6 +159,8 @@ public class TaxonomyMiner {
             trees.add(edge.getRefinementTree());
         }
 
+        trees.sort(Comparator.comparing(Tree::getTreeName));
+
         List<Set<Tree>> clusters = clusterEngine.detectClusters(trees);
 
         Map<Set<Tree>, TaxonomyFeature> clusterToFeatureMap = new HashMap<Set<Tree>, TaxonomyFeature>();
@@ -195,9 +198,16 @@ public class TaxonomyMiner {
 
             Comparison<Node> comparison = compareEngineHierarchical.compare(start.getTree().getRoot(), end.getTree().getRoot());
 
-            double similarity = comparison.getSimilarity();
+            boolean isEqual = false;
 
-            if (similarity == 1.0f) {
+            if (edge.getRefinementTree().getRoot() == null) {
+                isEqual = true;
+            } else {
+                double similarity = comparison.getSimilarity();
+                isEqual = similarity == 1.0f;
+            }
+
+            if (isEqual) {
 
                 edgesToRemove.add(edge);
                 nodesToRemove.add(end);
@@ -215,6 +225,7 @@ public class TaxonomyMiner {
                 }
 
             }
+
 
         }
 
@@ -266,11 +277,27 @@ public class TaxonomyMiner {
                 new MetricImpl(""));
 
 
-        Tree refinementTree = compareEngine.compareMerge(tree1.cloneTree(), tree2.cloneTree());
+        Tree clone1 = tree1.cloneTree();
+        Tree clone2 = tree2.cloneTree();
+
+        if (clone1.getRoot().getNodeType().equals("DIRECTORY") && clone2.getRoot().getNodeType().equals("DIRECTORY")) {
+            clone1.getRoot().getAttributes().clear();
+            clone2.getRoot().getAttributes().clear();
+        }
+
+
+        Tree refinementTree = compareEngine.compareMerge(clone1, clone2);
 
 
         removeNodesWithVariabilityClass(refinementTree.getRoot(), VariabilityClass.MANDATORY);
-        setNodesMandatory(refinementTree.getRoot());
+
+        if (refinementTree.getRoot().getVariabilityClass().equals(VariabilityClass.MANDATORY)) {
+            refinementTree.setRoot(null);
+        } else {
+            setNodesMandatory(refinementTree.getRoot());
+        }
+
+
         return refinementTree;
     }
 

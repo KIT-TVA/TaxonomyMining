@@ -255,4 +255,36 @@ public interface Node {
      */
     public Configuration createConfiguration();
 
+    /**
+     * removes the node (and all its children) from the parent
+     *
+     * @return the index of the previous position in the parent
+     */
+    public int cut();
+
+    /**
+     * removes the node from the parent. All the children will be added to the parent
+     *
+     * @return the index of the previous position in the parent
+     */
+    public int cutWithoutChildren();
+
+    /**
+     * returns the String from the first Value to the corresponding Attribute.
+     * The index selects the specific Attribute. The first Attribute has index.
+     *
+     * @param index
+     * @return the Value as String
+     */
+    public String getValueAt(int index);
+
+    /**
+     * This method sets the parent of this Node.
+     * Also it removes this node from the old parent and adds it to the new parent.
+     * This way no inconsistencies can occur when moving a node to a different parent.
+     *
+     * @param parent is the new parent
+     */
+    public void updateParent(Node parent);
+
 }

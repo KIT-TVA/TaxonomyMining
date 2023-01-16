@@ -7,6 +7,7 @@ import java.util.Map;
 import tva.kastel.kit.core.compare.comparator.impl.node.NodeResultElement;
 import tva.kastel.kit.core.compare.comparator.impl.node.StringComparator;
 import tva.kastel.kit.core.compare.comparator.interfaces.Comparator;
+import tva.kastel.kit.core.compare.comparator.interfaces.ResultElement;
 import tva.kastel.kit.core.compare.comparison.impl.AbstractComparisonFactory;
 import tva.kastel.kit.core.compare.comparison.impl.NodeComparisonFactory;
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
@@ -25,7 +26,7 @@ import tva.kastel.kit.core.model.impl.Pair;
  * @author NoLimit
  */
 public class CompareEngineHierarchical implements ICompareEngine<Node> {
-    private StringComparator defaultComparator = new StringComparator();
+    private Comparator<Node> defaultComparator;
     private Metric metric;
     private Matcher matcher;
 
@@ -34,6 +35,7 @@ public class CompareEngineHierarchical implements ICompareEngine<Node> {
     public CompareEngineHierarchical(Matcher selectedMatcher, Metric selectedMetric) {
         this(selectedMatcher, selectedMetric, new NodeComparisonFactory());
     }
+
 
     public CompareEngineHierarchical(Matcher selectedMatcher, Metric selectedMetric,
                                      AbstractComparisonFactory factory) {
@@ -81,7 +83,7 @@ public class CompareEngineHierarchical implements ICompareEngine<Node> {
                     comparison.addResultElement(comparator.compare(first, second));
                 }
             } else {
-                NodeResultElement c = defaultComparator.compare(first, second);
+                ResultElement<Node> c = defaultComparator.compare(first, second);
                 comparison.addResultElement(c);
 
             }

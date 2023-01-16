@@ -1,61 +1,64 @@
 package tva.kastel.kit.ui;
 
-import tva.kastel.kit.core.compare.CompareEngineHierarchical;
-import tva.kastel.kit.core.compare.matcher.SortingMatcher;
-import tva.kastel.kit.core.compare.metric.MetricImpl;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import tva.kastel.kit.core.compare.CompareEngineHierarchical;
+import tva.kastel.kit.core.compare.matcher.SortingMatcher;
+import tva.kastel.kit.core.compare.metric.MetricImpl;
 import tva.kastel.kit.core.io.reader.ReaderManager;
-import tva.kastel.kit.core.io.reader.gson.GsonImportService;
 import tva.kastel.kit.core.io.writer.dimacs.DimacsWriter;
 import tva.kastel.kit.core.io.writer.gson.GsonExportService;
 import tva.kastel.kit.core.io.writer.taxonomy.TaxonomyWriter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.DirectoryChooser;
 import tva.kastel.kit.core.model.interfaces.Attribute;
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.core.model.interfaces.Value;
 import tva.kastel.kit.taxonomy.mining.TaxonomyMiner;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
-import tva.kastel.kit.taxonomy.model.TaxonomyEdge;
+import tva.kastel.kit.ui.util.FileTable;
+import tva.kastel.kit.ui.util.FileWrapper;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 
 public class Controller implements Initializable {
     @FXML
-    public Button showTreeButton;
+    public Button taxonomizeButton;
     @FXML
-    private ListView<String> listView;
+    private TreeView<FileWrapper> explorerTree;
 
     @FXML
     private AnchorPane anchorPane;
 
     @FXML
-    private TreeView<Node> treeView;
+    private TreeView<Node> familyModelTree;
 
     @FXML
     private TableView<Attribute> tableView;
@@ -75,158 +78,73 @@ public class Controller implements Initializable {
     @FXML
     private Tab familyModelTab;
 
-    private ReaderManager readerManager;
+    private final ReaderManager readerManager;
 
-    private GsonImportService gsonImportService;
+    private final TaxonomyWriter taxonomyWriter;
+    private final CompareEngineHierarchical compareEngine;
 
-    private Tree tree;
-
-    private Map<String, Tree> artifactMap;
-
-    private TaxonomyWriter taxonomyWriter;
-
-
-    private CompareEngineHierarchical compareEngine;
+    private final TaxonomyMiner taxonomyMiner;
 
 
     public Controller() {
         readerManager = new ReaderManager();
-        gsonImportService = new GsonImportService();
         compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""));
         taxonomyWriter = new TaxonomyWriter(new GsonExportService(), new DimacsWriter());
-
-    }
-
-    public void showFiles() {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Open folder");
-        File directory = directoryChooser.showDialog(anchorPane.getScene().getWindow());
-
-        if (directory != null) {
-            String directoryPath = directory.getAbsolutePath();
-            File[] files = directory.listFiles();
-
-            Arrays.sort(files);
-
-            artifactMap = new HashMap<>();
-
-            for (File file : files) {
-                Tree tree = readerManager.readFile(file);
-                listView.getItems().add(file.getName());
-                artifactMap.put(file.getName(), tree);
-            }
-
-
-        }
-    }
-
-    public void importFiles() {
-
-        listView.getItems().clear();
-
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Open taxonomy folder");
-        File directory = directoryChooser.showDialog(anchorPane.getScene().getWindow());
-
-        if (directory != null) {
-            String directoryPath = directory.getAbsolutePath();
-            File[] files = directory.listFiles();
-
-            Arrays.sort(files);
-
-            TaxonomyMiner taxonomyMiner = new TaxonomyMiner();
-            artifactMap = new HashMap<>();
-            List<Tree> artifacts = new ArrayList<>();
-
-            for (File file : files) {
-                Tree tree = readerManager.readFile(file);
-                artifacts.add(tree);
-            }
-
-            Taxonomy taxonomy = taxonomyMiner.mine(artifacts);
-
-            List<String> listViewItems = new ArrayList<>();
-
-            for (TaxonomyEdge edge : taxonomy.getEdges()) {
-
-                String startName = edge.getStart().toString();
-                Tree startTree = edge.getStart().getTree();
-
-                artifactMap.put(startName, startTree);
-
-                String endName = edge.getEnd().toString();
-                Tree endTree = edge.getEnd().getTree();
-
-                artifactMap.put(endName, endTree);
-
-                String featureName = edge.getFeature().getName();
-                Tree featureTree = edge.getRefinementTree();
-
-                artifactMap.put(featureName, featureTree);
-
-                if (!listViewItems.contains(startName)) {
-                    listViewItems.add(startName);
-                }
-                if (!listViewItems.contains(endName)) {
-                    listViewItems.add(endName);
-                }
-                if (!listViewItems.contains(featureName)) {
-                    listViewItems.add(featureName);
-
-                }
-
-
-            }
-
-            listViewItems = listViewItems.stream().sorted().collect(Collectors.toList());
-
-            for (String item : listViewItems) {
-                listView.getItems().add(item);
-            }
-
-            try {
-                tabPane.getSelectionModel().select(taxonomyTab);
-
-                Graph graph = taxonomyWriter.plot(taxonomy);
-                BufferedImage bufferedImage = Graphviz.fromGraph(graph).render(Format.SVG).toImage();
-
-                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-
-                GraphicsContext context = canvas.getGraphicsContext2D();
-                context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-                canvas.setHeight(image.getHeight());
-                canvas.setWidth(image.getWidth());
-
-
-                context.drawImage(image, 0, 0, image.getWidth(), image.getHeight());
-
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        taxonomyMiner = new TaxonomyMiner();
 
 
     }
 
 
-    public void listViewItemClicked(MouseEvent event) {
+    public void createExplorerTree() {
 
-        if (event.getClickCount() == 2) {
-            tabPane.getSelectionModel().select(familyModelTab);
-            String selectedItem = listView.getSelectionModel().getSelectedItem();
-            tree = artifactMap.get(selectedItem);
-            buildTreeView();
+        Configurations configurations = new Configurations();
+        try {
+            Configuration configuration = configurations.properties(FileTable.CONFIGURATION_FILE);
+            String path = configuration.getString("root_directory");
+            File rootFile = new File(path);
+            TreeItem<FileWrapper> rootItem = new TreeItem<>(new FileWrapper(rootFile));
+            explorerTree.setRoot(rootItem);
+            rootItem.setExpanded(true);
+            addFileToBrowserRecursively(rootItem);
+        } catch (ConfigurationException e) {
+            throw new RuntimeException(e);
         }
 
-        compareButton.setDisable(listView.getSelectionModel().getSelectedItems().size() < 2);
-        compareButton.setDisable(listView.getSelectionModel().getSelectedItems().size() == 1);
+
+    }
+
+    private void addFileToBrowserRecursively(TreeItem<FileWrapper> treeItem) {
+
+        decorateExplorerNode(treeItem);
+        if (treeItem.getValue().getFile().isDirectory()) {
+
+            for (File child : treeItem.getValue().getFile().listFiles()) {
+
+                TreeItem<FileWrapper> childItem = new TreeItem<>(new FileWrapper(child));
+                treeItem.getChildren().add(childItem);
+                addFileToBrowserRecursively(childItem);
+
+            }
+        }
+
+    }
+
+    public void decorateExplorerNode(TreeItem<FileWrapper> treeItem) {
+        File file = treeItem.getValue().getFile();
+
+        if (file.isDirectory()) {
+            treeItem.setGraphic(new ImageView(FileTable.FV_DIRECTORY_16));
+        } else {
+            treeItem.setGraphic(new ImageView(FileTable.FV_FILE_16));
+        }
+
+
     }
 
 
     private void updateTableView() {
-        Node node = treeView.getSelectionModel().getSelectedItem().getValue();
+        Node node = familyModelTree.getSelectionModel().getSelectedItem().getValue();
 
         tableView.getColumns().clear();
         ObservableList<Attribute> data = FXCollections.observableArrayList(node.getAttributes());
@@ -250,29 +168,26 @@ public class Controller implements Initializable {
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    private void buildTreeView() {
+    private void createFamilyModelTree(Tree tree) {
+        familyModelTree.setRoot(new TreeItem<Node>(tree.getRoot()));
+        familyModelTree.getRoot().setGraphic(new ImageView(FileTable.rootImage));
+        familyModelTree.getRoot().setExpanded(true);
+        familyModelTree.setShowRoot(true);
 
-        FileTable.createString();
-
-        treeView.setRoot(new TreeItem<Node>(tree.getRoot()));
-        treeView.getRoot().setGraphic(new ImageView(FileTable.rootImage));
-        treeView.getRoot().setExpanded(true);
-        treeView.setShowRoot(true);
-
-        createTreeView(tree.getRoot(), treeView.getRoot());
+        createFamilyModelNodes(tree.getRoot(), familyModelTree.getRoot());
     }
 
-    public void createTreeView(Node node, TreeItem<Node> parent) {
+    public void createFamilyModelNodes(Node node, TreeItem<Node> parent) {
         for (Node n : node.getChildren()) {
-            TreeItem<Node> ti = decorateNode(new TreeItem<Node>(n));
+            TreeItem<Node> ti = decorateFamilyModelNode(new TreeItem<Node>(n));
             parent.getChildren().add(ti);
             if (!n.isLeaf()) {
-                createTreeView(n, ti);
+                createFamilyModelNodes(n, ti);
             }
         }
     }
 
-    public TreeItem<Node> decorateNode(TreeItem<Node> node) {
+    public TreeItem<Node> decorateFamilyModelNode(TreeItem<Node> node) {
         switch (node.getValue().getVariabilityClass()) {
             case MANDATORY:
                 node.setGraphic(new ImageView(FileTable.FV_MANDATORY_16));
@@ -295,39 +210,129 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (treeView.getSelectionModel().getSelectedIndices().size() == 1) {
+        familyModelTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (familyModelTree.getSelectionModel().getSelectedIndices().size() == 1) {
                 updateTableView();
             }
 
         });
-        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        compareButton.setDisable(true);
-        showTreeButton.setDisable(true);
 
+        explorerTree.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() == 2) {
+                    TreeItem<FileWrapper> selectedFile = explorerTree.getSelectionModel().getSelectedItem();
+                    Tree tree = readerManager.readFile(selectedFile.getValue().getFile());
+                    createFamilyModelTree(tree);
+                }
+            }
+        });
+
+        explorerTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            compareButton.setDisable(explorerTree.getSelectionModel().getSelectedIndices().size() < 2);
+            taxonomizeButton.setDisable(explorerTree.getSelectionModel().getSelectedIndices().size() < 2);
+
+        });
+
+        createExplorerTree();
+        explorerTree.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        compareButton.setDisable(true);
+        taxonomizeButton.setDisable(true);
+    }
+
+
+    public void createTaxonomy() {
+
+        List<Tree> trees = getSelectedFiles();
+        Taxonomy taxonomy = taxonomyMiner.mine(trees);
+
+        TreeItem<FileWrapper> rootItem = explorerTree.getRoot();
+
+        boolean hasTaxonomyFolder = false;
+        TreeItem<FileWrapper> taxonomyFolderItem = null;
+        for (TreeItem<FileWrapper> item : rootItem.getChildren()) {
+            if (item.getValue().getFile().getName().equals("Taxonomy")) {
+                hasTaxonomyFolder = true;
+                taxonomyFolderItem = item;
+            }
+        }
+
+        if (!hasTaxonomyFolder) {
+            File taxonomyFolder = Paths.get(rootItem.getValue().getFile().getAbsolutePath(), "Taxonomy").toFile();
+            taxonomyFolder.mkdir();
+            taxonomyFolderItem = new TreeItem<>();
+            taxonomyFolderItem.setValue(new FileWrapper(taxonomyFolder));
+            decorateExplorerNode(taxonomyFolderItem);
+            rootItem.getChildren().add(taxonomyFolderItem);
+        }
+
+        int count = 0;
+        for (TreeItem<FileWrapper> item : taxonomyFolderItem.getChildren()) {
+            if (item.getValue().getFile().getName().equals("Taxonomy_" + count)) {
+                count++;
+            } else {
+                break;
+            }
+        }
+
+        File innerTaxonomyFolder = Paths.get(taxonomyFolderItem.getValue().getFile().getAbsolutePath(), "Taxonomy_" + count).toFile();
+        innerTaxonomyFolder.mkdir();
+        TreeItem<FileWrapper> innerTaxonomyFolderItem = new TreeItem<>();
+        innerTaxonomyFolderItem.setValue(new FileWrapper(innerTaxonomyFolder));
+        decorateExplorerNode(innerTaxonomyFolderItem);
+        taxonomyFolderItem.getChildren().add(innerTaxonomyFolderItem);
+
+
+        taxonomyWriter.writeToFile(taxonomy, innerTaxonomyFolder.getAbsolutePath());
+
+        for (File file : innerTaxonomyFolder.listFiles()) {
+            TreeItem<FileWrapper> item = new TreeItem<>();
+            item.setValue(new FileWrapper(file));
+            decorateExplorerNode(item);
+            innerTaxonomyFolderItem.getChildren().add(item);
+        }
+
+        tabPane.getSelectionModel().select(taxonomyTab);
+        try {
+
+            Graph graph = taxonomyWriter.plot(taxonomy);
+            BufferedImage bufferedImage = Graphviz.fromGraph(graph).render(Format.SVG).toImage();
+
+            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+
+            GraphicsContext context = canvas.getGraphicsContext2D();
+            context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+            canvas.setHeight(image.getHeight());
+            canvas.setWidth(image.getWidth());
+
+
+            context.drawImage(image, 0, 0, image.getWidth(), image.getHeight());
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
-    public void compare() {
 
-        List<String> selectedFiles = listView.getSelectionModel().getSelectedItems();
+    private List<Tree> getSelectedFiles() {
+        List<TreeItem<FileWrapper>> selectedItems = explorerTree.getSelectionModel().getSelectedItems();
 
         List<Tree> trees = new ArrayList<>();
 
-        for (String file : selectedFiles) {
-            trees.add(artifactMap.get(file).cloneTree());
+        for (TreeItem<FileWrapper> item : selectedItems) {
+            trees.add(readerManager.readFile(item.getValue().getFile()));
         }
-
-        tree = compareEngine.compareMerge(trees);
-        buildTreeView();
+        return trees;
     }
 
-    public void showTree() {
-        String selectedItem = listView.getSelectionModel().getSelectedItem();
 
-        tree = artifactMap.get(selectedItem);
-
-        buildTreeView();
-
+    public void compare() {
+        Tree tree = compareEngine.compareMerge(getSelectedFiles());
+        createFamilyModelTree(tree);
     }
+
+
 }

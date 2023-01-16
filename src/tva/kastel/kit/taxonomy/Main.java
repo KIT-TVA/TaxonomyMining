@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -58,9 +59,13 @@ public class Main {
         ReaderManager readerManager = new ReaderManager();
         List<Tree> trees = new ArrayList<>();
 
-        for (File file : inputDirectory.listFiles()) {
+        File[] files = inputDirectory.listFiles();
+
+        Arrays.sort(files);
+
+        for (File file : files) {
             Tree tree = readerManager.readFile(file);
-            tree.getRoot().getAttributes().clear();
+     
             trees.add(tree);
         }
 

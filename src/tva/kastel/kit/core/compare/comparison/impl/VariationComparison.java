@@ -57,6 +57,7 @@ public class VariationComparison extends NodeComparison {
     @Override
     public Node mergeArtifacts() {
 
+
         if (getSimilarity() == ComparisonUtil.MANDATORY_VALUE) {
             getLeftArtifact().setVariabilityClass(VariabilityClass.MANDATORY);
             return getLeftArtifact();
@@ -79,43 +80,63 @@ public class VariationComparison extends NodeComparison {
             return getLeftArtifact();
         }
 
+        if (getLeftArtifact() == null || getRightArtifact() == null) {
+
+            if (getLeftArtifact() != null && getLeftArtifact().getNodeType().equals("CompilationUnit")) {
+                System.out.print("");
+
+            }
+
+            if (getRightArtifact() != null && getRightArtifact().getNodeType().equals("CompilationUnit")) {
+                System.out.print("");
+
+            }
+
+
+        }
+
         if (getLeftArtifact() != null && getRightArtifact() != null) {
 
-            getLeftArtifact().setVariabilityClass(VariabilityClass.MANDATORY);
+            if (hasAtLeastOneExactAttribute() || (getLeftArtifact().isRoot() && getRightArtifact().isRoot())) {
+                getLeftArtifact().setVariabilityClass(VariabilityClass.MANDATORY);
 
-            Set<Attribute> containedAttrs = new HashSet<Attribute>();
-            for (Attribute leftAttr : getLeftArtifact().getAttributes()) {
-                for (Attribute rightAttr : getRightArtifact().getAttributes()) {
-                    // same attr type
-                    if (leftAttr.keyEquals(rightAttr)) {
-                        List<Value> commonValues = getCommonValues(leftAttr, rightAttr);
-                        if (commonValues.size() > 0) {
-                            containedAttrs.add(new AttributeImpl(leftAttr.getAttributeKey(), commonValues));
+                Set<Attribute> containedAttrs = new HashSet<Attribute>();
+                for (Attribute leftAttr : getLeftArtifact().getAttributes()) {
+                    for (Attribute rightAttr : getRightArtifact().getAttributes()) {
+                        // same attr type
+                        if (leftAttr.keyEquals(rightAttr)) {
+                            List<Value> commonValues = getCommonValues(leftAttr, rightAttr);
+                            if (commonValues.size() > 0) {
+                                containedAttrs.add(new AttributeImpl(leftAttr.getAttributeKey(), commonValues));
+                            }
                         }
                     }
                 }
-            }
 
-            getLeftArtifact().getAttributes().clear();
-            getLeftArtifact().getAttributes().addAll(containedAttrs);
-            // process child comparisons recursively
-            getLeftArtifact().getChildren().clear();
-            for (Comparison<Node> childComparision : getChildComparisons()) {
+                getLeftArtifact().getAttributes().clear();
+                getLeftArtifact().getAttributes().addAll(containedAttrs);
+                // process child comparisons recursively
+                getLeftArtifact().getChildren().clear();
+                for (Comparison<Node> childComparison : getChildComparisons()) {
 
-                Node merge = ((Comparison<Node>) childComparision).mergeArtifacts();
+                    Node merge = ((Comparison<Node>) childComparison).mergeArtifacts();
 
-                if (merge != null) {
-                    getLeftArtifact().addChildWithParent(merge);
+                    if (merge != null) {
+                        getLeftArtifact().addChildWithParent(merge);
+                    }
+
                 }
+                // add artifacts min line number
+                getLeftArtifact()
+                        .setStartLine(Math.min(getLeftArtifact().getStartLine(), getRightArtifact().getStartLine()));
+                getLeftArtifact().setEndLine(Math.min(getLeftArtifact().getEndLine(), getRightArtifact().getEndLine()));
 
+                getLeftArtifact().sortChildNodes();
+                return getLeftArtifact();
             }
-            // add artifacts min line number
-            getLeftArtifact()
-                    .setStartLine(Math.min(getLeftArtifact().getStartLine(), getRightArtifact().getStartLine()));
-            getLeftArtifact().setEndLine(Math.min(getLeftArtifact().getEndLine(), getRightArtifact().getEndLine()));
 
-            getLeftArtifact().sortChildNodes();
-            return getLeftArtifact();
+            return null;
+
 
         }
 
@@ -132,9 +153,23 @@ public class VariationComparison extends NodeComparison {
                 }
             }
         }
-
         return commonValues;
-
     }
+
+    private boolean hasAtLeastOneExactAttribute() {
+        for (Attribute leftAttr : getLeftArtifact().getAttributes()) {
+            for (Attribute rightAttr : getRightArtifact().getAttributes()) {
+                // same attr type
+                if (leftAttr.keyEquals(rightAttr)) {
+                    List<Value> commonValues = getCommonValues(leftAttr, rightAttr);
+                    if (commonValues.size() == leftAttr.getAttributeValues().size() && commonValues.size() == rightAttr.getAttributeValues().size()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 
 }

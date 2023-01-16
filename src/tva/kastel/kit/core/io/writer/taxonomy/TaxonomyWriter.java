@@ -8,6 +8,7 @@ import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import tva.kastel.kit.core.io.writer.dimacs.DimacsWriter;
 import tva.kastel.kit.core.io.writer.gson.GsonExportService;
+import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
 import tva.kastel.kit.taxonomy.model.TaxonomyEdge;
 import tva.kastel.kit.taxonomy.model.TaxonomyNode;
@@ -17,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,6 +91,8 @@ public class TaxonomyWriter {
         Graph graph = Factory.graph().directed();
 
         Map<String, Node> nodeMap = new HashMap<>();
+
+        taxonomy.getEdges().sort(Comparator.comparing(TaxonomyEdge::toString));
 
         for (TaxonomyEdge edge : taxonomy.getEdges()) {
 

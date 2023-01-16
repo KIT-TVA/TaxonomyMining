@@ -14,6 +14,12 @@ public interface Tree extends Serializable {
     public Node getRoot();
 
     /**
+     * @return set the root node of this tree.
+     */
+    public void setRoot(Node node);
+
+
+    /**
      * This method returns the number of nodes that are contained in this tree.
      */
     public int getSize();

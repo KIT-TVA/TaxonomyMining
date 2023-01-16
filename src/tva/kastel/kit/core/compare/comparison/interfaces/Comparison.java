@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import tva.kastel.kit.core.compare.comparator.interfaces.ResultElement;
+import tva.kastel.kit.core.compare.comparison.util.ComparisonUtil;
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.impl.Pair;
 
@@ -139,7 +140,7 @@ public interface Comparison<Type> extends Serializable {
         // no results available so we use the similarity of our children
         if (!getChildComparisons().isEmpty() && !getResultElements().isEmpty()) {
             // TODO: weight which allows to scale this value
-            similarity = (childSimilarity + resultSimilarity) / 2;
+            similarity = (childSimilarity * ComparisonUtil.CHILD_SIMILARITY_WEIGHT + resultSimilarity * ComparisonUtil.RESULT_SIMILARITY_WEIGHT) / 2;
         }
         setSimilarity(similarity);
     }

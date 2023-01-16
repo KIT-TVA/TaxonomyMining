@@ -73,9 +73,13 @@ public class ClusterEngine {
                 map.get(cluster).add(iterator.next());
             }
 
-            for (Set<Tree> sets : map.values()) {
-                clusters.add(sets);
+
+            for (Set<Tree> set : map.values()) {
+
+                clusters.add(set);
             }
+
+
             return clusters;
 
 
