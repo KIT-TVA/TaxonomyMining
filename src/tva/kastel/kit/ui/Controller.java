@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -220,9 +221,7 @@ public class Controller implements Initializable {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getClickCount() == 2) {
-                    TreeItem<FileWrapper> selectedFile = explorerTree.getSelectionModel().getSelectedItem();
-                    Tree tree = readerManager.readFile(selectedFile.getValue().getFile());
-                    createFamilyModelTree(tree);
+                    showTree();
                 }
             }
         });
@@ -237,6 +236,28 @@ public class Controller implements Initializable {
         explorerTree.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         compareButton.setDisable(true);
         taxonomizeButton.setDisable(true);
+
+
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem menuItem = new MenuItem("Show tree");
+        menuItem.setGraphic(new ImageView(FileTable.FV_TREE_16));
+        menuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showTree();
+            }
+        });
+
+        contextMenu.getItems().add(menuItem);
+        explorerTree.setContextMenu(contextMenu);
+
+    }
+
+
+    public void showTree() {
+        TreeItem<FileWrapper> selectedFile = explorerTree.getSelectionModel().getSelectedItem();
+        Tree tree = readerManager.readFile(selectedFile.getValue().getFile());
+        createFamilyModelTree(tree);
     }
 
 

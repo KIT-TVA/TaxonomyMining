@@ -19,7 +19,9 @@ public class FileTable {
     public static final Image FV_DIRECTORY_16 = new Image(Paths.get(iconDirectory, "directory_16.png").toString());
 
     public static final Image FV_FILE_16 = new Image(Paths.get(iconDirectory, "file_16.png").toString());
-    
+
+    public static final Image FV_TREE_16 = new Image(Paths.get(iconDirectory, "tree_16.png").toString());
+
     public static final File CONFIGURATION_FILE = Paths.get(iconDirectory, "../configuration.properties").toFile();
 
 
