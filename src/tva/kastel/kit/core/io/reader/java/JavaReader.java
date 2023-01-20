@@ -15,8 +15,10 @@ import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.core.model.interfaces.Value;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class JavaReader extends AbstractArtifactReader {
         if (isFileSupported(element)) {
             String s = null;
             try {
-                s = Files.readString(Paths.get(element.getAbsolutePath()));
+                s = Files.readString(Paths.get(element.getAbsolutePath()), StandardCharsets.ISO_8859_1);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

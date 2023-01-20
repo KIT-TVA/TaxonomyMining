@@ -16,5 +16,7 @@
 
 * Set vm option --module-path and --add-modules to your JavaFX lib path
 
+* Add working directory to configuration file
+
 
 
