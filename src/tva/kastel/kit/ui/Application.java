@@ -12,7 +12,7 @@ public class Application extends javafx.application.Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("View.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 1000);
-        stage.setTitle("Taxonomy viewer");
+        stage.setTitle("Taxonomy Mining");
         stage.setScene(scene);
         stage.show();
     }
