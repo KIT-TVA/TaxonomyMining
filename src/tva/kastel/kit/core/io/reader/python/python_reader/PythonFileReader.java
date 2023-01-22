@@ -25,7 +25,7 @@ public class PythonFileReader extends AbstractArtifactReader {
 
 	public static String[] SUPPORTED_FILE_ENDINGS = { Const.PY };
 
-	private FileToTreeReader fileToTree;
+	private final FileToTreeReader fileToTree;
 
 	public PythonFileReader() {
 		super(SUPPORTED_FILE_ENDINGS);
