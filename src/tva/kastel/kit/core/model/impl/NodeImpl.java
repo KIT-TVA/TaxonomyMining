@@ -117,4 +117,10 @@ public class NodeImpl extends AbstractNode {
         return newNode;
     }
 
+    @Override
+    public void addAttribute(String attributeKey, String value) {
+        this.addAttribute(new AttributeImpl(attributeKey, new StringValueImpl(value)));
+
+    }
+
 }
