@@ -206,6 +206,9 @@ public class Const {
     public static final String BACKSLASH = "\\";
     public static final String QUOTATION = "\"";
     public static final String _TYPE = "_type";
+    public static final String RETURNS = "Returns";
+    public static final String VOID = "void";
+
 
     //Baned Python String
     public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno", "level", "lineno", "n", "s");

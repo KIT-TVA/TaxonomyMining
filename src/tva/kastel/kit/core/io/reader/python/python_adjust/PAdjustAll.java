@@ -24,6 +24,9 @@ public class PAdjustAll extends TreeAdjuster {
 		
 		TreeAdjuster assignmentAdjuster = new PAdjustAssignment();
 		assignmentAdjuster.recursiveAdjust(rootNode);
+
+		TreeAdjuster methodAdjuster = new PAdjustMethod();
+		methodAdjuster.recursiveAdjust(rootNode);
 		
 
 	}
