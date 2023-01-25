@@ -210,11 +210,12 @@ public class Const {
     public static final String VOID = "void";
     public static final String ARGS = "Args";
     public static final String ARG = "Arg";
-
+    public static final String ANNOTATION = "Annotation";
 
     //Baned Python String
     public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno", "level", "lineno", "n", "s");
-    public static final List<String> BANED_NODES = Arrays.asList("ctx", "type_ignores", "decorator_list", "defaults", "kw_defaults", "kwonlyargs", "posonlyargs", "Load", "Store", "keywords");
+    public static final List<String> BANED_NODES = Arrays.asList("Ctx", "TypeIgnores", "DecoratorList", "Defaults",
+            "KwDefaults", "Kwonlyargs", "Posonlyargs", "Load", "Store", "Keywords", Const.ARGS, Const.ANNOTATION);
 
 
 }

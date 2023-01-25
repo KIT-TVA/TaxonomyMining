@@ -41,12 +41,12 @@ public class PAdjustAll extends TreeAdjuster {
 
 	
 	private void removeAndRenameNodes(Node rootNode) {
-		TreeAdjuster nodeAdjuster = new PAdjustNodes();
-		nodeAdjuster.recursiveAdjust(rootNode);
-		
 		TreeAdjuster renameAdjuster = new AdjustRename();
 		renameAdjuster.recursiveAdjust(rootNode);
 		
 		recursiveAdjust(rootNode);
+
+		TreeAdjuster nodeAdjuster = new PAdjustNodes();
+		nodeAdjuster.recursiveAdjust(rootNode);
 	}
 }

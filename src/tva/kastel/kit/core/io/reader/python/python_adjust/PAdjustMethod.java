@@ -4,6 +4,8 @@ import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
 import tva.kastel.kit.core.io.reader.cpp.adjust.TreeAdjuster;
 import tva.kastel.kit.core.model.interfaces.Node;
 
+import java.util.Objects;
+
 public class PAdjustMethod extends TreeAdjuster {
     @Override
     protected void adjust(Node node, Node parent, String nodeType) {
@@ -20,7 +22,7 @@ public class PAdjustMethod extends TreeAdjuster {
             for (Node child: node.getChildren()) {
                 if (child.getNodeType().equals(Const.RETURNS)) {
                     String type = child.getChildren().get(0).getValueAt(0);
-                    node.addAttribute(Const.RETURN_TYPE, type);
+                    node.addAttribute(Const.RETURN_TYPE, Objects.requireNonNullElse(type, Const.VOID));
                     child.cut();
                     return;
                 }

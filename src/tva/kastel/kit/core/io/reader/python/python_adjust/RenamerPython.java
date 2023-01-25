@@ -44,7 +44,7 @@ public final class RenamerPython {
 		map.put("Assign", Const.ASSIGNMENT);
 		map.put("Test", Const.CONDITION_BIG);
 		map.put("Arguments", Const.ARGUMENT_BIG);
-		map.put("Arg", Const.ARG);
+		map.put("Arg", Const.ARGUMENT_BIG);
 	}
 	
 	

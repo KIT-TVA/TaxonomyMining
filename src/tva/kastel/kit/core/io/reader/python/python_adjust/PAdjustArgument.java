@@ -9,8 +9,9 @@ public class PAdjustArgument extends TreeAdjuster {
 
 	@Override
 	protected void adjust(Node node, Node parent, String nodeType) {
-		if (nodeType.equals(Const.ARGS)) {
-			node.cutWithoutChildren();
+		if (nodeType.equals(Const.ARGUMENT_BIG) && !node.getAttributes().isEmpty()) {
+			node.getAttributes().get(0).setAttributeKey(Const.NAME_BIG);
+
 		}
 
 	}
