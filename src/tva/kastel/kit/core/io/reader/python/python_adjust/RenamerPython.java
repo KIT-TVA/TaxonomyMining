@@ -43,8 +43,8 @@ public final class RenamerPython {
 		map.put("Return", Const.RETURN_STMT);
 		map.put("Assign", Const.ASSIGNMENT);
 		map.put("Test", Const.CONDITION_BIG);
-
-		
+		map.put("Arguments", Const.ARGUMENT_BIG);
+		map.put("Arg", Const.ARG);
 	}
 	
 	

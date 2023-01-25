@@ -208,6 +208,8 @@ public class Const {
     public static final String _TYPE = "_type";
     public static final String RETURNS = "Returns";
     public static final String VOID = "void";
+    public static final String ARGS = "Args";
+    public static final String ARG = "Arg";
 
 
     //Baned Python String
