@@ -9,7 +9,7 @@ import java.util.List;
  * @author David Bumm
  */
 public class Const {
-    public static final String C_PLUS_PLUS = "JAVA"; //TODO change this to cpp
+    public static final String C_PLUS_PLUS = "CPP";
     public static final String PY = "py";
     public static final String PYTHON = "Python";
     public static final String CPP = "cpp";
@@ -211,6 +211,7 @@ public class Const {
     public static final String ARGS = "Args";
     public static final String ARG = "Arg";
     public static final String ANNOTATION = "Annotation";
+    public static final String OR_ELSE = "Orelse";
 
     //Baned Python String
     public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno", "level", "lineno", "n", "s");

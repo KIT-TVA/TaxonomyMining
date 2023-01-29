@@ -15,6 +15,9 @@ public class PAdjustAll extends TreeAdjuster {
 		
 		TreeAdjuster importAdjuster = new PAdjustImports();
 		importAdjuster.recursiveAdjust(rootNode);
+
+		TreeAdjuster commentAdjuster = new PAdjustComment();
+		commentAdjuster.recursiveAdjust(rootNode);
 		
 		TreeAdjuster ifAdjuster = new PAdjustIf();
 		ifAdjuster.recursiveAdjust(rootNode);

@@ -45,6 +45,7 @@ public final class RenamerPython {
 		map.put("Test", Const.CONDITION_BIG);
 		map.put("Arguments", Const.ARGUMENT_BIG);
 		map.put("Arg", Const.ARGUMENT_BIG);
+		map.put(Const.OR_ELSE, Const.ELSE_BIG);
 	}
 	
 	

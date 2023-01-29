@@ -16,6 +16,9 @@ public class PAdjustIf extends TreeAdjuster {
                 }
             }
         }
+        if (nodeType.equals(Const.ELSE_BIG) && node.getChildren().isEmpty()) {
+            node.cut();
+        }
 
     }
 
