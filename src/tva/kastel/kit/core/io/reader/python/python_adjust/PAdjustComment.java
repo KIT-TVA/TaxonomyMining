@@ -14,7 +14,16 @@ public class PAdjustComment extends TreeAdjuster {
                 if (!comment.getAttributes().isEmpty()) {
 
                     if (parent != null) {
-                        parent.addAttribute(Const.COMMENT_BIG, comment.getValueAt(0));
+                        String value = comment.getValueAt(0);
+                        value = value.replace("\\n", "ö");
+                        String[] allComments = value.split("ö");
+
+                        for (int i = 0; i < allComments.length; i++) {
+                            if (!allComments[i].trim().equals(Const.EMPTY)) {
+                                parent.addAttribute(Const.COMMENT_BIG, allComments[i]);
+                            }
+                        }
+
                         comment.cutWithoutChildren();
                     } else {
                         comment.setNodeType(Const.LINE_COMMENT);
