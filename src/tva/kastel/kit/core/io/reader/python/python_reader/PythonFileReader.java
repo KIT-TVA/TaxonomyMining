@@ -13,6 +13,7 @@ import com.google.gson.JsonSyntaxException;
 import tva.kastel.kit.core.io.reader.AbstractArtifactReader;
 import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
 import tva.kastel.kit.core.io.reader.python.python_adjust.PAdjustAll;
+import tva.kastel.kit.core.io.reader.python.python_adjust.RenamerPython;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.TreeImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
@@ -100,7 +101,8 @@ public class PythonFileReader extends AbstractArtifactReader {
 
     private void addAttribute(Node node, String entry, JsonElement value) {
         if (!Const.BANED_ATTRIBUTES.contains(entry)) {
-            node.addAttribute(entry, getName(value));
+            String entryName = RenamerPython.getInstance().renameAttribute(entry);
+            node.addAttribute(entryName, getName(value));
         }
     }
 
