@@ -15,6 +15,8 @@ public class PAdjustArgument extends TreeAdjuster {
 			String type = node.getValueAt(0);
 			parent.addAttribute(Const.TYPE_BIG, type);
 			node.cutWithoutChildren();
+		} else if (nodeType.equals(Const.ARGS) && (parent.getNodeType().equals(Const.M_DECL) || parent.getNodeType().equals(Const.ARGUMENT_BIG))) {
+			node.cutWithoutChildren();
 		}
 
 	}

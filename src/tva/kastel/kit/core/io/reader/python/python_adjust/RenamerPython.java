@@ -20,6 +20,7 @@ public final class RenamerPython {
 	private static RenamerPython instance = null;
 	private final Map<String, String> map;
 
+
 	private RenamerPython() {
 		map = new HashMap<>();
 		fillMap();
@@ -46,6 +47,7 @@ public final class RenamerPython {
 		map.put("Arguments", Const.ARGUMENT_BIG);
 		map.put("Arg", Const.ARGUMENT_BIG);
 		map.put(Const.OR_ELSE, Const.ELSE_BIG);
+
 	}
 	
 	

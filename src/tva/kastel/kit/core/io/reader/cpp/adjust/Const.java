@@ -216,7 +216,7 @@ public class Const {
     //Baned Python String
     public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno", "level", "lineno", "n", "s");
     public static final List<String> BANED_NODES = Arrays.asList("Ctx", "TypeIgnores", "DecoratorList", "Defaults",
-            "KwDefaults", "Kwonlyargs", "Posonlyargs", "Load", "Store", "Keywords", Const.ARGS, Const.ANNOTATION);
+            "KwDefaults", "Kwonlyargs", "Posonlyargs", "Load", "Store", "Keywords", Const.ANNOTATION);
 
 
 }
