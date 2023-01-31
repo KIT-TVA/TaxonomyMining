@@ -1,5 +1,6 @@
 package tva.kastel.kit.core.io.reader.cpp.adjust;
 
+import tva.kastel.kit.core.model.impl.AttributeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 
@@ -121,5 +122,30 @@ public abstract class TreeAdjuster {
         }
         node.getAttributes().get(0).getAttributeValues().set(0, new StringValueImpl(value));
         node.getAttributes().get(0).setAttributeKey(Const.OPERATOR_BIG);
+    }
+
+    /**
+     * this method renames a Node to their literal equivalent (int, double, ..)
+     * @param node the node that will be adjusted
+     * @param value the value of the literal (e.g integer value, double value, ..)
+     */
+    protected void adjustLiteralNode(Node node, String value) {
+        if (value.matches(Const.REGEX_INT)) {
+            node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.INT)));
+            node.setNodeType(Const.INT_LIT);
+        } else if (value.equals(Const.TRUE) || value.equals(Const.FALSE)) {
+            node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.BOOLEAN)));
+            node.setNodeType(Const.BOOLEAN_LIT);
+        } else if (value.matches(Const.REGEX_DOUBLE)) {
+            node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.DOUBLE)));
+            node.setNodeType(Const.DOUBLE_LIT);
+        } else if (value.matches(Const.REGEX_FLOAT)) {
+            node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.FLOAT)));
+            node.setNodeType(Const.FLOAT_LIT);
+        } else {
+            node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.STRING)));
+            node.setNodeType(Const.STRING_LIT);
+        }
+        node.getAttributes().get(0).setAttributeKey(Const.VALUE);
     }
 }

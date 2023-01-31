@@ -8,7 +8,15 @@ import tva.kastel.kit.core.model.interfaces.Node;
 
 public class PAdjustAll extends TreeAdjuster {
 
-	
+
+	/**
+	 * This method creates all TreeAdjuster for Python files and calls recursiveAdjust().
+	 * So the entire tree provided will be adjusted in various ways to be more similar to other programmaning languages.
+	 * This method is not thread safe since the TreeAdjuster depend on each other.
+	 * Some adjust() calls can be reordered without causing problems but this is not recommended.
+	 *
+	 * @param rootNode the rootNode that will be adjusted
+	 */
 	public void adjustAll(Node rootNode) {
 		
 		removeAndRenameNodes(rootNode);
@@ -39,6 +47,9 @@ public class PAdjustAll extends TreeAdjuster {
 
 		TreeAdjuster returnAdjuster = new PAdjustReturn();
 		returnAdjuster.recursiveAdjust(rootNode);
+
+		TreeAdjuster constantAdjuster= new PAdjustConstants();
+		constantAdjuster.recursiveAdjust(rootNode);
 		
 
 	}

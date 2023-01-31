@@ -216,6 +216,7 @@ public class Const {
     public static final String OR_ELSE = "Orelse";
     public static final String COMPARE = "Compare";
     public static final String OPS = "Ops";
+    public static final String CONSTANT = "Constant";
 
     //Baned Python String
     public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno", "level", "lineno", "n", "s");

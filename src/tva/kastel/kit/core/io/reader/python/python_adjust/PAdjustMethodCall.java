@@ -26,7 +26,7 @@ public class PAdjustMethodCall extends TreeAdjuster {
             node.getChildren().addAll(allArguments);
 
         }
-        if (nodeType.equals(Const.NAME_BIG) && !node.getAttributes().isEmpty() && parent.getNodeType().equals("Func") && parent.getParent().getNodeType().equals("Call")) {
+        if (nodeType.equals(Const.NAME_EXPR) && !node.getAttributes().isEmpty() && parent.getNodeType().equals("Func") && parent.getParent().getNodeType().equals("Call")) {
             parent.getParent().setNodeType(Const.METHOD_CALL);
             parent.getParent().addAttribute(Const.NAME_BIG, node.getValueAt(0));
             parent.cut();

@@ -45,15 +45,7 @@ public class PAdjustBinaryExpr extends TreeAdjuster {
                     }
                 }
             }
-
-
             binaryExpr.addAttribute(Const.OPERATOR_BIG, operator);
-
-
-
-
-
-
             node.cut();
         }
     }
