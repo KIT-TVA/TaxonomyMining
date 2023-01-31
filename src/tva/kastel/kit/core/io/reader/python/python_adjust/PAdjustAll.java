@@ -48,8 +48,11 @@ public class PAdjustAll extends TreeAdjuster {
 		TreeAdjuster returnAdjuster = new PAdjustReturn();
 		returnAdjuster.recursiveAdjust(rootNode);
 
-		TreeAdjuster constantAdjuster= new PAdjustConstants();
+		TreeAdjuster constantAdjuster = new PAdjustConstants();
 		constantAdjuster.recursiveAdjust(rootNode);
+
+		TreeAdjuster exceptionAdjuster = new PAdjustException();
+		exceptionAdjuster.recursiveAdjust(rootNode);
 		
 
 	}
