@@ -2,6 +2,7 @@ package tva.kastel.kit.core.io.reader.python.python_adjust;
 
 import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
 import tva.kastel.kit.core.io.reader.cpp.adjust.TreeAdjuster;
+import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 
 import java.util.ArrayList;
@@ -30,21 +31,48 @@ public class PAdjustBinaryExpr extends TreeAdjuster {
             if (operator != null) {
                 operator.cut();
             }
+        } else if (nodeType.equals(Const.COMPARE)) {
+            Node binaryExpr = new NodeImpl(Const.BINARY_EXPR, parent);
+            String operator = "";
+            for (Node child : node.getChildren()) {
+                if (child.getNodeType().equals(Const.OPS) && !child.getChildren().isEmpty()) {
+                    operator = child.getChildren().get(0).getNodeType();
+                    operator = getOperatorFromNodeType(operator);
+                } else if (!child.getChildren().isEmpty()) {
+                    for (Node childChild: child.getChildren()) {
+
+                        binaryExpr.addChildWithParent(childChild.cloneNode());
+                    }
+                }
+            }
+
+
+            binaryExpr.addAttribute(Const.OPERATOR_BIG, operator);
+
+
+
+
+
+
+            node.cut();
         }
     }
+    
+    
 
     private String getOperatorFromNodeType(String nodeType) {
-        switch (nodeType) {
-            case "Add":
-                return Const.PLUS;
-            case "Div":
-                return Const.DIVIDE;
-            case "Mult":
-                return Const.MULTIPLY;
-            case "Sub":
-                return Const.MINUS;
-            default:
-                return nodeType;
-        }
+        return switch (nodeType) {
+            case "Add" -> Const.PLUS;
+            case "Div" -> Const.DIVIDE;
+            case "Mult" -> Const.MULTIPLY;
+            case "Sub" -> Const.MINUS;
+            case "Eq" -> Const.EQUALS;
+            case "NotEq" -> Const.NOT_EQUALS;
+            case "Gt" -> Const.GREATER;
+            case "GtE" -> Const.GREATER_EQUALS;
+            case "Lt" -> Const.LESS;
+            case "LtE" -> Const.LESS_EQUALS;
+            default -> nodeType;
+        };
     }
 }

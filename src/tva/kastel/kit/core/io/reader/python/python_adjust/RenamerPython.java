@@ -56,6 +56,8 @@ public final class RenamerPython {
         nodeMap.put("Arg", Const.ARGUMENT_BIG);
         nodeMap.put(Const.OR_ELSE, Const.ELSE_BIG);
         nodeMap.put("BinOp", Const.BINARY_EXPR);
+        nodeMap.put("Iter", Const.CONDITION_BIG);
+        nodeMap.put("For", Const.FOR_STMT);
 
     }
 

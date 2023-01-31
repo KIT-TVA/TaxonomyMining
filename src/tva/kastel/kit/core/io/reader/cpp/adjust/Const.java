@@ -107,6 +107,8 @@ public class Const {
     //operators
     public static final String LESS = "LESS";
     public static final String GREATER = "GREATER";
+    public static final String EQUALS = "EQUALS";
+    public static final String NOT_EQUALS = "NOT_EQUALS";
     public static final String GREATER_EQUALS = "GREATER_EQUALS";
     public static final String LESS_EQUALS = "LESS_EQUALS";
     public static final String DIVIDE = "DIVIDE";
@@ -212,6 +214,8 @@ public class Const {
     public static final String ARG = "Arg";
     public static final String ANNOTATION = "Annotation";
     public static final String OR_ELSE = "Orelse";
+    public static final String COMPARE = "Compare";
+    public static final String OPS = "Ops";
 
     //Baned Python String
     public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno", "level", "lineno", "n", "s");
