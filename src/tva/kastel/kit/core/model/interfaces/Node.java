@@ -287,4 +287,7 @@ public interface Node {
      */
     public void updateParent(Node parent);
 
+
+    public int getSize();
+
 }

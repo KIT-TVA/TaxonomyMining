@@ -23,6 +23,8 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
+import tva.kastel.kit.core.compare.comparison.impl.VariationComparisonFactory;
+import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
 import tva.kastel.kit.core.compare.matcher.SortingMatcher;
 import tva.kastel.kit.core.compare.metric.MetricImpl;
 import tva.kastel.kit.core.io.reader.ReaderManager;
@@ -35,17 +37,17 @@ import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.core.model.interfaces.Value;
 import tva.kastel.kit.taxonomy.mining.TaxonomyMiner;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
+import tva.kastel.kit.taxonomy.util.DirectoryTable;
 import tva.kastel.kit.ui.util.FileTable;
 import tva.kastel.kit.ui.util.FileWrapper;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class Controller implements Initializable {
@@ -91,25 +93,16 @@ public class Controller implements Initializable {
         compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""));
         taxonomyWriter = new TaxonomyWriter(new GsonExportService(), new DimacsWriter());
         taxonomyMiner = new TaxonomyMiner();
-
-
     }
 
 
     public void createExplorerTree() {
 
-        Configurations configurations = new Configurations();
-        try {
-            Configuration configuration = configurations.properties(FileTable.CONFIGURATION_FILE);
-            String path = configuration.getString("root_directory");
-            File rootFile = new File(path);
-            TreeItem<FileWrapper> rootItem = new TreeItem<>(new FileWrapper(rootFile));
-            explorerTree.setRoot(rootItem);
-            rootItem.setExpanded(true);
-            addFileToBrowserRecursively(rootItem);
-        } catch (ConfigurationException e) {
-            throw new RuntimeException(e);
-        }
+        File rootFile = DirectoryTable.baseDirectory;
+        TreeItem<FileWrapper> rootItem = new TreeItem<>(new FileWrapper(rootFile));
+        explorerTree.setRoot(rootItem);
+        rootItem.setExpanded(true);
+        addFileToBrowserRecursively(rootItem);
 
 
     }
@@ -239,52 +232,75 @@ public class Controller implements Initializable {
 
 
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem menuItem = new MenuItem("Show tree");
-        menuItem.setGraphic(new ImageView(FileTable.FV_TREE_16));
-        menuItem.setOnAction(new EventHandler<ActionEvent>() {
+        MenuItem showTreeItem = new MenuItem("Show tree");
+        showTreeItem.setGraphic(new ImageView(FileTable.FV_TREE_16));
+
+        MenuItem openInExplorerItem = new MenuItem("Open in explorer");
+        openInExplorerItem.setGraphic(new ImageView(FileTable.FV_EXPLORER_16));
+
+        showTreeItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 showTree();
             }
         });
 
-        contextMenu.getItems().add(menuItem);
+        openInExplorerItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                if (explorerTree.getSelectionModel().getSelectedItems().size() == 1) {
+                    TreeItem<FileWrapper> selectedFile = explorerTree.getSelectionModel().getSelectedItem();
+                    try {
+                        Runtime.getRuntime().exec("explorer.exe /select," + selectedFile.getValue().getFile().getAbsolutePath());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+
+                }
+
+
+            }
+        });
+
+        contextMenu.getItems().add(showTreeItem);
+        contextMenu.getItems().add(openInExplorerItem);
         explorerTree.setContextMenu(contextMenu);
 
     }
 
 
     public void showTree() {
-        TreeItem<FileWrapper> selectedFile = explorerTree.getSelectionModel().getSelectedItem();
-        Tree tree = readerManager.readFile(selectedFile.getValue().getFile());
-        createFamilyModelTree(tree);
+
+        if (explorerTree.getSelectionModel().getSelectedItems().size() == 1) {
+            TreeItem<FileWrapper> selectedFile = explorerTree.getSelectionModel().getSelectedItem();
+            Tree tree = readerManager.readFile(selectedFile.getValue().getFile());
+            createFamilyModelTree(tree);
+
+
+        }
+
+
     }
 
 
     public void createTaxonomy() {
 
         List<Tree> trees = getSelectedFiles();
+
         Taxonomy taxonomy = taxonomyMiner.mine(trees);
 
         TreeItem<FileWrapper> rootItem = explorerTree.getRoot();
 
-        boolean hasTaxonomyFolder = false;
+
         TreeItem<FileWrapper> taxonomyFolderItem = null;
         for (TreeItem<FileWrapper> item : rootItem.getChildren()) {
-            if (item.getValue().getFile().getName().equals("Taxonomy")) {
-                hasTaxonomyFolder = true;
+            if (item.getValue().getFile().equals(DirectoryTable.outputDirectory)) {
                 taxonomyFolderItem = item;
             }
         }
 
-        if (!hasTaxonomyFolder) {
-            File taxonomyFolder = Paths.get(rootItem.getValue().getFile().getAbsolutePath(), "Taxonomy").toFile();
-            taxonomyFolder.mkdir();
-            taxonomyFolderItem = new TreeItem<>();
-            taxonomyFolderItem.setValue(new FileWrapper(taxonomyFolder));
-            decorateExplorerNode(taxonomyFolderItem);
-            rootItem.getChildren().add(taxonomyFolderItem);
-        }
 
         int count = 0;
         for (TreeItem<FileWrapper> item : taxonomyFolderItem.getChildren()) {
@@ -342,8 +358,13 @@ public class Controller implements Initializable {
 
         List<Tree> trees = new ArrayList<>();
 
+        List<File> files = new ArrayList<>();
         for (TreeItem<FileWrapper> item : selectedItems) {
-            trees.add(readerManager.readFile(item.getValue().getFile()));
+            files.add(item.getValue().getFile());
+        }
+        Collections.sort(files);
+        for (File file : files) {
+            trees.add(readerManager.readFile(file));
         }
         return trees;
     }

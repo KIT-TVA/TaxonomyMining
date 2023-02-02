@@ -1,6 +1,7 @@
 package tva.kastel.kit.ui.util;
 
 import javafx.scene.image.Image;
+import tva.kastel.kit.ui.Application;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -8,37 +9,20 @@ import java.nio.file.Paths;
 
 public class FileTable {
 
-    public static String iconDirectory = createIconDirectory();
 
-    public static final Image rootImage = new Image(Paths.get(iconDirectory, "root_16.png").toString());
+    public static final Image rootImage = new Image(FileTable.class.getResourceAsStream("/icons/root_16.png"));
 
-    public static final Image FV_ALTERNATIVE_16 = new Image(Paths.get(iconDirectory, "alternative_16.png").toString());
-    public static final Image FV_MANDATORY_16 = new Image(Paths.get(iconDirectory, "mandatory_16.png").toString());
-    public static final Image FV_OPTIONAL_16 = new Image(Paths.get(iconDirectory, "optional_16.png").toString());
+    public static final Image FV_ALTERNATIVE_16 = new Image(FileTable.class.getResourceAsStream("/icons/alternative_16.png"));
+    public static final Image FV_MANDATORY_16 = new Image(FileTable.class.getResourceAsStream("/icons/mandatory_16.png"));
+    public static final Image FV_OPTIONAL_16 = new Image(FileTable.class.getResourceAsStream("/icons/optional_16.png"));
 
-    public static final Image FV_DIRECTORY_16 = new Image(Paths.get(iconDirectory, "directory_16.png").toString());
+    public static final Image FV_DIRECTORY_16 = new Image(FileTable.class.getResourceAsStream("/icons/directory_16.png"));
 
-    public static final Image FV_FILE_16 = new Image(Paths.get(iconDirectory, "file_16.png").toString());
+    public static final Image FV_FILE_16 = new Image(FileTable.class.getResourceAsStream("/icons/file_16.png"));
 
-    public static final Image FV_TREE_16 = new Image(Paths.get(iconDirectory, "tree_16.png").toString());
+    public static final Image FV_TREE_16 = new Image(FileTable.class.getResourceAsStream("/icons/tree_16.png"));
 
-    public static final File CONFIGURATION_FILE = Paths.get(iconDirectory, "../configuration.properties").toFile();
+    public static final Image FV_EXPLORER_16 = new Image(FileTable.class.getResourceAsStream("/icons/explorer_16.png"));
 
-
-    public static String createIconDirectory() {
-
-        iconDirectory = "";
-
-        try {
-            iconDirectory = Paths.get(FileTable.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toString();
-            iconDirectory = Paths.get(iconDirectory, "//..//..//resources//icons//").toAbsolutePath().toString();
-
-
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-
-        return iconDirectory;
-    }
 
 }

@@ -2,18 +2,33 @@ package tva.kastel.kit.core.compare.clustering;
 
 
 import jep.Interpreter;
+import jep.JepConfig;
 import jep.NDArray;
 import jep.SharedInterpreter;
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
+import tva.kastel.kit.core.compare.comparison.impl.VariationComparison;
+import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
+import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
 
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.*;
 
 public class ClusterEngine {
 
     private CompareEngineHierarchical compareEngine;
 
+    private ByteArrayOutputStream outputStream;
+
     public ClusterEngine(CompareEngineHierarchical compareEngine) {
+        JepConfig config = new JepConfig();
+        outputStream = new ByteArrayOutputStream();
+        config.redirectStdout(outputStream);
+        config.redirectStdErr(System.err);
+        SharedInterpreter.setConfig(config);
         this.compareEngine = compareEngine;
     }
 
@@ -57,8 +72,27 @@ public class ClusterEngine {
             interp.exec("clustering = AgglomerativeClustering(n_clusters=None, affinity='precomputed', linkage='complete', distance_threshold=threshold)");
             interp.exec("clustering.fit(distances)");
             interp.exec("labels = clustering.labels_");
-            NDArray labels = (NDArray) interp.getValue("labels");
-            long[] results = (long[]) labels.getData();
+
+            String os = System.getProperty("os.name").toLowerCase();
+            long[] results = null;
+            if (os.contains("win")) {
+                NDArray labels = (NDArray) interp.getValue("labels");
+                results = (long[]) labels.getData();
+            } else {
+                interp.exec("print(np.array2string(labels, separator=',', max_line_width=np.inf))");
+                String resultString = new String(outputStream.toByteArray());
+                outputStream.reset();
+                resultString = resultString.replace("[", "").replace("]", "").replace("\n", "").trim();
+                results = new long[trees.size()];
+                String[] parts = resultString.split(",");
+                for (int i = 0; i < results.length; i++) {
+                    parts[i] = parts[i].trim();
+                    results[i] = Long.parseLong(parts[i]);
+                }
+
+
+            }
+
 
             Iterator<Tree> iterator = trees.iterator();
             Map<Integer, Set<Tree>> map = new HashMap<Integer, Set<Tree>>();
@@ -120,7 +154,26 @@ public class ClusterEngine {
                 if (i == j) {
                     matrix[i][j] = 0.0f;
                 } else {
-                    double distance = 1 - compareEngine.compare(tree1, tree2).getSimilarity();
+
+
+                    Comparison<Node> comparison = compareEngine.compare(tree1, tree2);
+                    double similarity = 0;
+
+                    if (comparison instanceof VariationComparison) {
+                        similarity = ((VariationComparison) comparison).getVariationSimilarity();
+
+                        // System.out.println("Comparing " + tree1.getTreeName() + " " + tree2.getTreeName());
+                        //System.out.println("Similarity : " + comparison.getSimilarity());
+                        // System.out.println("Similarity (new) : " + similarity);
+                        //System.out.println();
+
+
+                    } else {
+                        similarity = comparison.getSimilarity();
+                    }
+
+
+                    double distance = 1 - similarity;
                     matrix[i][j] = distance;
                     matrix[j][i] = distance;
                 }

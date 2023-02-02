@@ -19,8 +19,6 @@ public class VariationComparison extends NodeComparison {
 
     private static final long serialVersionUID = 2146314128422038513L;
 
-    public static ComparisonLevel comparisonLevel = ComparisonLevel.FILE;
-
 
     public VariationComparison(Node leftArtifact, Node rightArtifact) {
         super(leftArtifact, rightArtifact);
@@ -56,8 +54,6 @@ public class VariationComparison extends NodeComparison {
 
     @Override
     public Node mergeArtifacts() {
-
-
         if (getSimilarity() == ComparisonUtil.MANDATORY_VALUE) {
             getLeftArtifact().setVariabilityClass(VariabilityClass.MANDATORY);
             return getLeftArtifact();
@@ -80,20 +76,6 @@ public class VariationComparison extends NodeComparison {
             return getLeftArtifact();
         }
 
-        if (getLeftArtifact() == null || getRightArtifact() == null) {
-
-            if (getLeftArtifact() != null && getLeftArtifact().getNodeType().equals("CompilationUnit")) {
-                System.out.print("");
-
-            }
-
-            if (getRightArtifact() != null && getRightArtifact().getNodeType().equals("CompilationUnit")) {
-                System.out.print("");
-
-            }
-
-
-        }
 
         if (getLeftArtifact() != null && getRightArtifact() != null) {
 
@@ -169,6 +151,79 @@ public class VariationComparison extends NodeComparison {
             }
         }
         return false;
+    }
+
+
+    public double getVariationSimilarity() {
+        int size = countNodes();
+
+        int leftSize = getLeftArtifact() != null ? getLeftArtifact().getSize() : 0;
+        int rightSize = getRightArtifact() != null ? getRightArtifact().getSize() : 0;
+
+        if (leftSize + rightSize == 0) {
+            return 0;
+        }
+
+        return size / ((double) (leftSize + rightSize) / 2);
+
+    }
+
+
+    public int countNodes() {
+
+        int nodes = 0;
+
+
+        if (getSimilarity() == ComparisonUtil.MANDATORY_VALUE) {
+            nodes += getLeftArtifact().getSize();
+        } else if (getResultSimilarity() == ComparisonUtil.MANDATORY_VALUE) {
+
+            nodes += 1;
+            for (Comparison<Node> childComparison : getChildComparisons()) {
+                nodes += ((VariationComparison) childComparison).countNodes();
+            }
+        } else if (getLeftArtifact() != null && getRightArtifact() != null) {
+
+            if (hasAtLeastOneExactAttribute() || (getLeftArtifact().isRoot() && getRightArtifact().isRoot())) {
+                nodes += 1;
+                for (Comparison<Node> childComparison : getChildComparisons()) {
+                    nodes += ((VariationComparison) childComparison).countNodes();
+                }
+
+            }
+
+        }
+
+        return nodes;
+    }
+
+
+    public int countNodes2() {
+
+        int nodes = 0;
+
+
+        if (getSimilarity() == ComparisonUtil.MANDATORY_VALUE) {
+            nodes += getLeftArtifact().getSize();
+        } else if (getResultSimilarity() == ComparisonUtil.MANDATORY_VALUE) {
+
+            nodes += 1;
+            for (Comparison<Node> childComparison : getChildComparisons()) {
+                nodes += ((VariationComparison) childComparison).countNodes();
+            }
+        } else if (getLeftArtifact() != null && getRightArtifact() != null) {
+
+            if (hasAtLeastOneExactAttribute() || (getLeftArtifact().isRoot() && getRightArtifact().isRoot())) {
+                nodes += 1;
+                for (Comparison<Node> childComparison : getChildComparisons()) {
+                    nodes += ((VariationComparison) childComparison).countNodes();
+                }
+
+            }
+
+        }
+
+        return nodes;
     }
 
 

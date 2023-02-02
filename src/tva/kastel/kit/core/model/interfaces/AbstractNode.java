@@ -394,4 +394,14 @@ public abstract class AbstractNode implements Node {
         parent.addChildWithParent(this);
     }
 
+    @Override
+    public int getSize() {
+        // temp starts with 1 which represents itself
+        int temp = 1;
+        for (Node node : this.getChildren()) {
+            temp += node.getNumberOfChildren();
+        }
+        return temp;
+    }
+
 }

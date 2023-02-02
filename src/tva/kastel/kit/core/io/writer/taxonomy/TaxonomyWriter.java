@@ -100,7 +100,7 @@ public class TaxonomyWriter {
                 start = nodeMap.get(edge.getStart().toString());
 
             } else {
-                start = Factory.node(edge.getStart().toString());
+                start = Factory.node(edge.getStart().toString() + "\n" + edge.getStart().getTree().getSize());
                 nodeMap.put(edge.getStart().toString(), start);
             }
 
@@ -109,14 +109,15 @@ public class TaxonomyWriter {
                 end = nodeMap.get(edge.getEnd().toString());
 
             } else {
-                end = Factory.node(edge.getEnd().toString());
+                end = Factory.node(edge.getEnd().toString() + "\n" + edge.getEnd().getTree().getSize());
                 nodeMap.put(edge.getEnd().toString(), end);
             }
 
 
-            graph = graph.with(start.link(Factory.to(end).with(Label.of(edge.getFeature().getName()))));
+            graph = graph.with(start.link(Factory.to(end).with(Label.of(edge.getFeature().getName() + "\n" + edge.getRefinementTree().getSize()))));
 
         }
+
 
         return graph;
 

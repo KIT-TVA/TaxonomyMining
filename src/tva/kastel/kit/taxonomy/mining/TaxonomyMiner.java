@@ -2,6 +2,7 @@ package tva.kastel.kit.taxonomy.mining;
 
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
 import tva.kastel.kit.core.compare.clustering.ClusterEngine;
+import tva.kastel.kit.core.compare.comparison.impl.VariationComparison;
 import tva.kastel.kit.core.compare.comparison.impl.VariationComparisonFactory;
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
 import tva.kastel.kit.core.compare.matcher.SortingMatcher;
@@ -20,18 +21,16 @@ import java.util.Map.Entry;
 
 public class TaxonomyMiner {
 
-    private ClusterEngine clusterEngine;
-    private CompareEngineHierarchical compareEngine;
-
-    private Map<Tree, Tree> cloneMap;
-
+    private final ClusterEngine clusterEngine;
+    private final CompareEngineHierarchical compareEngine;
+    private final Map<Tree, Tree> cloneMap;
     private int treeCount = 0;
 
     public TaxonomyMiner() {
 
         this.cloneMap = new HashMap<Tree, Tree>();
-        this.compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""));
-        this.clusterEngine = new ClusterEngine(compareEngine);
+        this.compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""), new VariationComparisonFactory());
+        this.clusterEngine = new ClusterEngine(new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""), new VariationComparisonFactory()));
 
     }
 
@@ -61,11 +60,11 @@ public class TaxonomyMiner {
             clusters = clusterEngine.detectClusters(targets);
 
             targets.clear();
+            System.out.println(clusterEngine.getThreshold());
             for (Set<Tree> cluster : clusters) {
                 // process cluster: merge tree, derive refinements and create taxonomy nodes
                 // with edges
 
-                System.out.println("Overall clusters: " + clusters.size());
 
                 if (cluster.size() > 1) {
 
@@ -81,7 +80,10 @@ public class TaxonomyMiner {
 
                     treeList.sort(Comparator.comparing(Tree::getTreeName));
 
+
                     Tree mergedTree = compareEngine.compareMerge(treeList);
+
+
                     mergedTree.setTreeName("Abstraction_" + treeCount);
                     System.out.println("Abstraction: " + mergedTree.getTreeName());
                     treeCount++;
@@ -122,7 +124,7 @@ public class TaxonomyMiner {
                 } else {
 
                     Comparison<Node> comparison = compareEngine.compare(item1, item2);
-                    double similarity = comparison.getSimilarity();
+                    double similarity = ((VariationComparison) comparison).getVariationSimilarity();
 
                     double distance = 1 - similarity;
                     matrix[i][j] = distance;

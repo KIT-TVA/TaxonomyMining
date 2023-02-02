@@ -51,6 +51,7 @@ public class CompareEngineHierarchical implements ICompareEngine<Node> {
         root.updateSimilarity();
         getMatcher().calculateMatching(root);
         root.updateSimilarity();
+
         Pair<Map<String, List<Comparison<Node>>>, Map<String, List<Comparison<Node>>>> optionalMatchings = root
                 .findOptionalMatchings();
 
@@ -58,6 +59,7 @@ public class CompareEngineHierarchical implements ICompareEngine<Node> {
 
         return rootNode;
     }
+
 
     @Override
     public Comparison<Node> compare(Node first, Node second) {

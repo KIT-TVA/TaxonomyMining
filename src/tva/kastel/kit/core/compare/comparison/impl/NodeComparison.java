@@ -14,7 +14,7 @@ import java.util.*;
  *
  * @author NoLimit
  */
-public class NodeComparison extends AbstractComparsion<Node> {
+public class NodeComparison extends AbstractComparison<Node> {
     private static final long serialVersionUID = 7260025397506680712L;
 
     public NodeComparison(Node leftArtifact, Node rightArtifact) {

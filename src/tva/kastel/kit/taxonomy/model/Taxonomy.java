@@ -81,17 +81,6 @@ public class Taxonomy {
 
     }
 
-    public Tree getTree(String target) {
-
-        TaxonomyNode targetNode = null;
-        for (TaxonomyNode node : nodes) {
-            if (target == node.getTree().getTreeName()) {
-                targetNode = node;
-                break;
-            }
-        }
-        return targetNode == null ? null : targetNode.getTree();
-    }
 
     public Formula getPropositionalFormula() {
         FormulaFactory factory = new FormulaFactory();
@@ -143,8 +132,6 @@ public class Taxonomy {
 
     @Override
     public String toString() {
-
-        //String tax = "Root: " + this.root.toString() + "\n";
 
         String tax = "";
         for (TaxonomyEdge edge : edges) {

@@ -14,7 +14,9 @@ import tva.kastel.kit.core.model.interfaces.Tree;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class manages all artifact reader and creates a tree if file can be
@@ -31,6 +33,21 @@ public class ReaderManager {
         importService = new GsonImportService();
     }
 
+
+    public List<Tree> readFiles(File inputDirectory) {
+        List<Tree> trees = new ArrayList<>();
+
+        File[] files = inputDirectory.listFiles();
+        Arrays.sort(files);
+
+        for (File file : files) {
+            Tree tree = readFile(file);
+            trees.add(tree);
+        }
+
+        return trees;
+    }
+    
 
     public Tree readFile(File fte) {
         Tree tree = new TreeImpl(fte.getName(), readFileRecursivly(null, fte));
