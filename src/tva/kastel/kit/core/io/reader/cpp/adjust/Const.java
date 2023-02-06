@@ -219,7 +219,8 @@ public class Const {
     public static final String CONSTANT = "Constant";
     public static final String EXC = "Exc";
     public static final String EXCEPTION = "Exception";
-
+    public static final String SUBSCRIPT = "Subscript";
+    public static final String SLICE = "Slice";
 
     //Baned Python String
     public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno", "level", "lineno", "n", "s");

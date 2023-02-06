@@ -53,7 +53,9 @@ public class PAdjustAll extends TreeAdjuster {
 
 		TreeAdjuster exceptionAdjuster = new PAdjustException();
 		exceptionAdjuster.recursiveAdjust(rootNode);
-		
+
+		TreeAdjuster arrayAdjuster = new PAdjustArray();
+		arrayAdjuster.recursiveAdjust(rootNode);
 
 	}
 	

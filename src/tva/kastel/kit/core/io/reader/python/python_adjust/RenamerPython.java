@@ -59,7 +59,7 @@ public final class RenamerPython {
         nodeMap.put("Iter", Const.CONDITION_BIG);
         nodeMap.put("For", Const.FOR_STMT);
         nodeMap.put(Const.NAME_BIG, Const.NAME_EXPR);
-
+        nodeMap.put("While", Const.WHILE_STMT);
     }
 
 
