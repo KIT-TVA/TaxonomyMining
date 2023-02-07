@@ -6,20 +6,18 @@ import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
+import tva.kastel.kit.core.compare.clustering.DendrogramNode;
+import tva.kastel.kit.core.compare.clustering.Refinement;
 import tva.kastel.kit.core.io.writer.dimacs.DimacsWriter;
 import tva.kastel.kit.core.io.writer.gson.GsonExportService;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
-import tva.kastel.kit.taxonomy.model.TaxonomyEdge;
-import tva.kastel.kit.taxonomy.model.TaxonomyNode;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TaxonomyWriter {
 
@@ -51,10 +49,11 @@ public class TaxonomyWriter {
             printWriter.print(taxonomy.toString());
             printWriter.close();
 
-            dimacsWriter.writeToFile(taxonomy.getPropositionalFormula(), directoryPath);
+            //  dimacsWriter.writeToFile(taxonomy.getPropositionalFormula(), directoryPath);
 
-            for (TaxonomyNode node : taxonomy.getNodes()) {
-                File nodeFile = Paths.get(directoryPath, node.toString() + ".tree").toFile();
+
+            for (DendrogramNode node : taxonomy.getAllNodes()) {
+                File nodeFile = Paths.get(directoryPath, node.getTree().toString() + ".tree").toFile();
                 fileWriter = new FileWriter(nodeFile);
                 printWriter = new PrintWriter(fileWriter);
 
@@ -64,15 +63,20 @@ public class TaxonomyWriter {
                 printWriter.close();
             }
 
-            for (TaxonomyEdge edge : taxonomy.getEdges()) {
-                File edgeFile = Paths.get(directoryPath, edge.getFeature().getName() + ".tree").toFile();
-                fileWriter = new FileWriter(edgeFile);
-                printWriter = new PrintWriter(fileWriter);
+            List<String> processedRefinements = new ArrayList<>();
+            for (Refinement refinement : taxonomy.getAllRefinements()) {
+                if (!processedRefinements.contains(refinement.getName())) {
+                    File edgeFile = Paths.get(directoryPath, refinement.getName() + ".tree").toFile();
+                    fileWriter = new FileWriter(edgeFile);
+                    printWriter = new PrintWriter(fileWriter);
 
-                String json = exportService.exportTree(edge.getRefinementTree());
+                    String json = exportService.exportTree(refinement.getTree());
 
-                printWriter.write(json);
-                printWriter.close();
+                    printWriter.write(json);
+                    printWriter.close();
+                }
+                processedRefinements.add(refinement.getName());
+
             }
 
             Graph graph = plot(taxonomy);
@@ -91,30 +95,32 @@ public class TaxonomyWriter {
 
         Map<String, Node> nodeMap = new HashMap<>();
 
-        taxonomy.getEdges().sort(Comparator.comparing(TaxonomyEdge::toString));
+        taxonomy.getAllRefinements().sort(Comparator.comparing(Refinement::getName));
 
-        for (TaxonomyEdge edge : taxonomy.getEdges()) {
+        List<Refinement> refinementList = taxonomy.getAllRefinements();
+
+        for (Refinement refinement : refinementList) {
 
             Node start = null;
-            if (nodeMap.containsKey(edge.getStart().toString())) {
-                start = nodeMap.get(edge.getStart().toString());
+            if (nodeMap.containsKey(refinement.getStart().toString())) {
+                start = nodeMap.get(refinement.getStart().toString());
 
             } else {
-                start = Factory.node(edge.getStart().toString() + "\n" + edge.getStart().getTree().getSize());
-                nodeMap.put(edge.getStart().toString(), start);
+                start = Factory.node(refinement.getStart().toString() + "\n" + refinement.getStart().getTree().getSize());
+                nodeMap.put(refinement.getStart().toString(), start);
             }
 
             Node end = null;
-            if (nodeMap.containsKey(edge.getEnd().toString())) {
-                end = nodeMap.get(edge.getEnd().toString());
+            if (nodeMap.containsKey(refinement.getEnd().toString())) {
+                end = nodeMap.get(refinement.getEnd().toString());
 
             } else {
-                end = Factory.node(edge.getEnd().toString() + "\n" + edge.getEnd().getTree().getSize());
-                nodeMap.put(edge.getEnd().toString(), end);
+                end = Factory.node(refinement.getEnd().toString() + "\n" + refinement.getEnd().getTree().getSize());
+                nodeMap.put(refinement.getEnd().toString(), end);
             }
 
 
-            graph = graph.with(start.link(Factory.to(end).with(Label.of(edge.getFeature().getName() + "\n" + edge.getRefinementTree().getSize()))));
+            graph = graph.with(start.link(Factory.to(end).with(Label.of(refinement.getName() + "\n" + refinement.getTree().getSize()))));
 
         }
 

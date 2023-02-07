@@ -9,15 +9,9 @@ import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.taxonomy.mining.TaxonomyMiner;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
 import tva.kastel.kit.taxonomy.util.DirectoryTable;
-import tva.kastel.kit.ui.util.FileTable;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Demo {

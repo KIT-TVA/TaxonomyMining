@@ -198,33 +198,4 @@ public class VariationComparison extends NodeComparison {
     }
 
 
-    public int countNodes2() {
-
-        int nodes = 0;
-
-
-        if (getSimilarity() == ComparisonUtil.MANDATORY_VALUE) {
-            nodes += getLeftArtifact().getSize();
-        } else if (getResultSimilarity() == ComparisonUtil.MANDATORY_VALUE) {
-
-            nodes += 1;
-            for (Comparison<Node> childComparison : getChildComparisons()) {
-                nodes += ((VariationComparison) childComparison).countNodes();
-            }
-        } else if (getLeftArtifact() != null && getRightArtifact() != null) {
-
-            if (hasAtLeastOneExactAttribute() || (getLeftArtifact().isRoot() && getRightArtifact().isRoot())) {
-                nodes += 1;
-                for (Comparison<Node> childComparison : getChildComparisons()) {
-                    nodes += ((VariationComparison) childComparison).countNodes();
-                }
-
-            }
-
-        }
-
-        return nodes;
-    }
-
-
 }

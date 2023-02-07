@@ -1,149 +1,174 @@
 package tva.kastel.kit.core.compare.clustering;
 
 
-import jep.Interpreter;
-import jep.JepConfig;
-import jep.NDArray;
-import jep.SharedInterpreter;
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
-import tva.kastel.kit.core.compare.comparison.impl.VariationComparison;
+import tva.kastel.kit.core.compare.comparison.impl.NodeComparisonFactory;
+import tva.kastel.kit.core.compare.comparison.impl.VariationComparisonFactory;
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
+import tva.kastel.kit.core.compare.comparison.similarity.JaccardSimilarity;
+import tva.kastel.kit.core.compare.matcher.SortingMatcher;
+import tva.kastel.kit.core.compare.metric.MetricImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
 
-
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.util.*;
 
 public class ClusterEngine {
 
-    private CompareEngineHierarchical compareEngine;
 
-    private ByteArrayOutputStream outputStream;
-
-    public ClusterEngine(CompareEngineHierarchical compareEngine) {
-        JepConfig config = new JepConfig();
-        outputStream = new ByteArrayOutputStream();
-        config.redirectStdout(outputStream);
-        config.redirectStdErr(System.err);
-        SharedInterpreter.setConfig(config);
-        this.compareEngine = compareEngine;
+    public DendrogramNode calculateDendrogram(List<Tree> trees) {
+        return calculateDendrogram(trees, true);
     }
 
+    private DendrogramNode calculateDendrogram(List<Tree> trees, boolean createAbstractions) {
 
-    private double threshold = 0.15f;
+        int abstractionCounter = 0;
 
-    public double getThreshold() {
-        return threshold;
-    }
+        CompareEngineHierarchical compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""), new VariationComparisonFactory());
 
-    public void setThreshold(double threshold) {
-        this.threshold = threshold;
-    }
+        Map<Integer, DendrogramNode> map = new HashMap<>();
 
-
-    public List<Set<Tree>> detectClusters(List<Tree> trees) {
-
-        String distanceString = buildDistanceString(trees);
-        List<Set<Tree>> clusters = new ArrayList<Set<Tree>>();
-
-        if (trees.size() == 0) {
-            return clusters;
+        for (int i = 0; i < trees.size(); i++) {
+            map.put(i, new DendrogramNode(trees.get(i), 0));
         }
 
-        if (trees.size() == 1) {
-            Set<Tree> treeSet = new HashSet<Tree>();
-            treeSet.add(trees.get(0));
-            clusters.add(treeSet);
-            return clusters;
-        }
+        double[][] distanceMatrix = calculateDistanceMatrix(trees);
 
 
-        try (Interpreter interp = new SharedInterpreter()) {
-            interp.exec("from sklearn.cluster import AgglomerativeClustering");
-            interp.exec("import numpy as np");
-            interp.exec("import sys");
+        do {
+            double lowestDistance = Double.MAX_VALUE;
+            int lowestIndexI = 0;
+            int lowestIndexJ = 0;
 
-            interp.exec("distances = " + distanceString);
-            interp.exec("threshold = " + threshold + " + 0.00000001");
+            for (int x = 0; x < distanceMatrix.length; x++) {
+                for (int y = x; y < distanceMatrix[0].length; y++) {
 
-            interp.exec("clustering = AgglomerativeClustering(n_clusters=None, affinity='precomputed', linkage='complete', distance_threshold=threshold)");
-            interp.exec("clustering.fit(distances)");
-            interp.exec("labels = clustering.labels_");
+                    if (distanceMatrix[x][y] < lowestDistance && x != y) {
+                        lowestDistance = distanceMatrix[x][y];
+                        lowestIndexI = x;
+                        lowestIndexJ = y;
+                    }
+                }
+            }
 
-            String os = System.getProperty("os.name").toLowerCase();
-            long[] results = null;
-            if (os.contains("win")) {
-                NDArray labels = (NDArray) interp.getValue("labels");
-                results = (long[]) labels.getData();
+
+            double[][] updatedDistanceMatrix = new double[distanceMatrix.length][distanceMatrix[0].length];
+
+
+            for (int i = 0; i < distanceMatrix.length; i++) {
+                for (int j = i; j < distanceMatrix[0].length; j++) {
+
+                    if ((i == j)) {
+                        updatedDistanceMatrix[i][j] = 0;
+                        updatedDistanceMatrix[j][i] = 0;
+                    } else if (i == lowestIndexJ) {
+                        updatedDistanceMatrix[i][j] = (distanceMatrix[i][j] + distanceMatrix[j][lowestIndexI]) / 2;
+                        updatedDistanceMatrix[j][i] = updatedDistanceMatrix[i][j];
+                    } else if (i == lowestIndexI) {
+                        updatedDistanceMatrix[i][j] = (distanceMatrix[i][j] + distanceMatrix[j][lowestIndexJ]) / 2;
+                        updatedDistanceMatrix[j][i] = updatedDistanceMatrix[i][j];
+                    } else {
+                        updatedDistanceMatrix[i][j] = distanceMatrix[i][j];
+                        updatedDistanceMatrix[j][i] = updatedDistanceMatrix[i][j];
+
+                    }
+                }
+            }
+
+
+            DendrogramNode node1 = map.get(lowestIndexI);
+            DendrogramNode node2 = map.get(lowestIndexJ);
+            DendrogramNode parent = null;
+            if (createAbstractions) {
+                Tree mergedTree = compareEngine.compareMerge(node1.getTree().cloneTree(), node2.getTree().cloneTree());
+                mergedTree.setTreeName("Abstraction_" + abstractionCounter);
+                abstractionCounter++;
+                parent = new DendrogramNode(mergedTree, updatedDistanceMatrix[lowestIndexI][lowestIndexJ], node1, node2);
             } else {
-                interp.exec("print(np.array2string(labels, separator=',', max_line_width=np.inf))");
-                String resultString = new String(outputStream.toByteArray());
-                outputStream.reset();
-                resultString = resultString.replace("[", "").replace("]", "").replace("\n", "").trim();
-                results = new long[trees.size()];
-                String[] parts = resultString.split(",");
-                for (int i = 0; i < results.length; i++) {
-                    parts[i] = parts[i].trim();
-                    results[i] = Long.parseLong(parts[i]);
+                parent = new DendrogramNode(updatedDistanceMatrix[lowestIndexI][lowestIndexJ], node1, node2);
+            }
+
+            map.replace(lowestIndexJ, parent);
+            List<DendrogramNode> nodes = map.values().stream().toList();
+            map.clear();
+            List<DendrogramNode> newNodes = new ArrayList<>();
+            newNodes.addAll(nodes.subList(0, lowestIndexI));
+            newNodes.addAll(nodes.subList(lowestIndexI + 1, nodes.size()));
+            for (int i = 0; i < newNodes.size(); i++) {
+                map.put(i, newNodes.get(i));
+            }
+
+
+            double[][] reducedDistanceMatrix = new double[updatedDistanceMatrix.length - 1][updatedDistanceMatrix[0].length - 1];
+            int k = 0;
+            for (int i = 0; i < updatedDistanceMatrix.length - 1; i++, k++) {
+
+                if (i == lowestIndexI) {
+                    k++;
                 }
-
-
+                System.arraycopy(updatedDistanceMatrix[k], 0, reducedDistanceMatrix[i], 0, lowestIndexI);
+                System.arraycopy(updatedDistanceMatrix[k], lowestIndexI + 1, reducedDistanceMatrix[i], lowestIndexI, updatedDistanceMatrix[k].length - 1 - lowestIndexI);
             }
 
-
-            Iterator<Tree> iterator = trees.iterator();
-            Map<Integer, Set<Tree>> map = new HashMap<Integer, Set<Tree>>();
-
-            for (int i = 0; i < results.length; i++) {
-                int cluster = (int) results[i];
-                if (!map.containsKey(cluster)) {
-                    map.put(cluster, new HashSet<Tree>());
-                }
-                map.get(cluster).add(iterator.next());
-            }
-
-
-            for (Set<Tree> set : map.values()) {
-
-                clusters.add(set);
-            }
-
-
-            return clusters;
-
+            distanceMatrix = reducedDistanceMatrix;
 
         }
-
+        while (distanceMatrix.length != 1);
+        return map.get(0);
 
     }
 
+    public List<Set<Tree>> cluster(List<Tree> trees, double threshold) {
 
-    private String getDistanceString(double[][] matrix, int size) {
-        String distanceString = "(";
-        for (int i = 0; i < size; i++) {
-            distanceString += "[";
-            for (int j = 0; j < size; j++) {
-                distanceString += matrix[i][j];
-                if (j != size - 1) {
-                    distanceString += ",";
+        DendrogramNode root = calculateDendrogram(trees, false);
+        List<DendrogramNode> nodesBelowThreshold = getNodesBelowThreshold(root, threshold);
+        List<Set<Tree>> clusters = new ArrayList<>();
+
+        Set<Tree> treesInCluster = new HashSet<>();
+
+        for (DendrogramNode node : nodesBelowThreshold) {
+            Set<Tree> cluster = new HashSet<>();
+            List<DendrogramNode> allChildren = node.getAllChildren();
+            for (DendrogramNode child : allChildren) {
+                if (child.getTree() != null) {
+                    cluster.add(child.getTree());
+                    treesInCluster.add(child.getTree());
                 }
-
             }
-            distanceString += "]";
-            if (i != size - 1) {
-                distanceString += ",";
-            }
+            clusters.add(cluster);
 
         }
-        distanceString += ")";
 
-        return distanceString;
+        for (Tree tree : trees) {
+            if (!treesInCluster.contains(tree)) {
+                Set<Tree> cluster = new HashSet<>();
+                cluster.add(tree);
+                clusters.add(cluster);
+            }
+        }
+
+        return clusters;
     }
 
-    private String buildDistanceString(List<Tree> trees) {
+    private List<DendrogramNode> getNodesBelowThreshold(DendrogramNode currentNode, double threshold) {
+
+        List<DendrogramNode> nodes = new ArrayList<>();
+
+        if (currentNode.getHeight() <= threshold && currentNode.getTree() == null) {
+            nodes.add(currentNode);
+        } else {
+            for (DendrogramNode child : currentNode.getChildren()) {
+                nodes.addAll(getNodesBelowThreshold(child, threshold));
+            }
+        }
+
+        return nodes;
+    }
+
+
+    public double[][] calculateDistanceMatrix(List<Tree> trees) {
+        CompareEngineHierarchical compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""), new NodeComparisonFactory());
+
         double[][] matrix = new double[trees.size()][trees.size()];
         for (int i = 0; i < trees.size(); i++) {
             for (int j = i; j < trees.size(); j++) {
@@ -154,24 +179,16 @@ public class ClusterEngine {
                 if (i == j) {
                     matrix[i][j] = 0.0f;
                 } else {
-
-
-                    Comparison<Node> comparison = compareEngine.compare(tree1, tree2);
                     double similarity = 0;
-
-                    if (comparison instanceof VariationComparison) {
-                        similarity = ((VariationComparison) comparison).getVariationSimilarity();
-
-                        // System.out.println("Comparing " + tree1.getTreeName() + " " + tree2.getTreeName());
-                        //System.out.println("Similarity : " + comparison.getSimilarity());
-                        // System.out.println("Similarity (new) : " + similarity);
-                        //System.out.println();
-
-
+                    if (tree1.getRoot() == null && tree2.getRoot() == null) {
+                        similarity = 1;
+                    } else if (tree1.getRoot() == null || tree2.getRoot() == null) {
+                        similarity = 0;
                     } else {
-                        similarity = comparison.getSimilarity();
+                        Comparison<Node> comparison = compareEngine.compare(tree1, tree2);
+                        JaccardSimilarity jaccardSimilarity = new JaccardSimilarity();
+                        similarity = jaccardSimilarity.calculateSimilarity(comparison);
                     }
-
 
                     double distance = 1 - similarity;
                     matrix[i][j] = distance;
@@ -179,7 +196,7 @@ public class ClusterEngine {
                 }
             }
         }
-        return getDistanceString(matrix, trees.size());
+        return matrix;
     }
 
 

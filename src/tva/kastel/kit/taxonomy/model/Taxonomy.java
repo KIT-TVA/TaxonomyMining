@@ -5,117 +5,100 @@ import org.logicng.formulas.Formula;
 import org.logicng.formulas.FormulaFactory;
 import org.logicng.formulas.Variable;
 import org.logicng.transformations.cnf.BDDCNFTransformation;
-import tva.kastel.kit.core.model.interfaces.Tree;
+import tva.kastel.kit.core.compare.clustering.DendrogramNode;
+import tva.kastel.kit.core.compare.clustering.Refinement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class Taxonomy {
 
-    private List<TaxonomyNode> nodes;
 
-    private List<TaxonomyEdge> edges;
+    private DendrogramNode rootNode;
 
-    private TaxonomyNode root;
 
-    private Tree tree;
-
-    public Tree getTree() {
-        return tree;
+    public DendrogramNode getRootNode() {
+        return rootNode;
     }
 
-    public void setTree(Tree tree) {
-        this.tree = tree;
+    public void setRootNode(DendrogramNode rootNode) {
+        this.rootNode = rootNode;
     }
 
-    public List<TaxonomyNode> getNodes() {
-        return nodes;
+    public Taxonomy(DendrogramNode rootNode) {
+        this.rootNode = rootNode;
     }
 
-    public void setNodes(List<TaxonomyNode> nodes) {
-        this.nodes = nodes;
+
+    @Override
+    public String toString() {
+        return rootNode.printNode();
     }
 
-    public List<TaxonomyEdge> getEdges() {
-        return edges;
+    public List<DendrogramNode> getAllNodes() {
+        return rootNode.getAllChildren();
     }
 
-    public void setEdges(List<TaxonomyEdge> edges) {
-        this.edges = edges;
+    public List<Refinement> getAllRefinements() {
+        return rootNode.getAllRefinements();
     }
 
-    public Taxonomy(List<TaxonomyNode> nodes, List<TaxonomyEdge> edges, TaxonomyNode root, Tree tree) {
-        this.root = root;
-        this.nodes = nodes;
-        this.edges = edges;
-        this.tree = tree;
-    }
 
-    public TaxonomyNode getRoot() {
-        return root;
-    }
+    private List<Refinement> getPath(DendrogramNode target) {
 
-    public void setRoot(TaxonomyNode root) {
-        this.root = root;
-    }
+        List<Refinement> refinementsToFollow = new ArrayList<>();
 
-    public List<TaxonomyEdge> getPath(TaxonomyNode target) {
-
-        List<TaxonomyEdge> edgesToFollow = new ArrayList<TaxonomyEdge>();
-
-        while (target != root) {
-            for (TaxonomyEdge taxonomyEdge : this.edges) {
-
-                if (taxonomyEdge.getEnd().equals(target)) {
-                    edgesToFollow.add(taxonomyEdge);
-                    target = taxonomyEdge.getStart();
+        List<Refinement> allRefinements = getAllRefinements();
+        while (target != this.rootNode) {
+            for (Refinement refinement : allRefinements) {
+                if (refinement.getEnd().equals(target)) {
+                    refinementsToFollow.add(refinement);
+                    target = refinement.getStart();
                     break;
-
                 }
+
             }
         }
-        return Lists.reverse(edgesToFollow);
+
+        return Lists.reverse(refinementsToFollow);
 
     }
 
 
     public Formula getPropositionalFormula() {
         FormulaFactory factory = new FormulaFactory();
-        Map<TaxonomyFeature, Variable> variableMapping = new HashMap<TaxonomyFeature, Variable>();
+        Map<String, Variable> variableMapping = new HashMap<String, Variable>();
 
-        List<TaxonomyFeature> taxonomyFeatures = new ArrayList<TaxonomyFeature>();
-        for (TaxonomyEdge edge : edges) {
-            taxonomyFeatures.add(edge.getFeature());
-            if (!variableMapping.containsKey(edge.getFeature())) {
-                variableMapping.put(edge.getFeature(), factory.variable(edge.getFeature().getName()));
+        List<Refinement> allRefinements = getAllRefinements();
+        for (Refinement refinement : allRefinements) {
+            if (!variableMapping.containsKey(refinement.getName())) {
+                variableMapping.put(refinement.getName(), factory.variable(refinement.getName()));
             }
         }
 
-        Variable baseVariable = factory.variable(root.toString());
+        Variable baseVariable = factory.variable("Base");
         List<Formula> singleFormulas = new ArrayList<Formula>();
-        for (TaxonomyNode taxonomyNode : nodes) {
 
-            List<TaxonomyEdge> path = getPath(taxonomyNode);
 
-            List<TaxonomyFeature> visitedFeatures = new ArrayList<TaxonomyFeature>();
-            List<TaxonomyFeature> unvisitedFeatures = new ArrayList<TaxonomyFeature>();
-            for (TaxonomyEdge edge : path) {
-                TaxonomyFeature feature = edge.getFeature();
-                visitedFeatures.add(feature);
-            }
-            unvisitedFeatures.addAll(taxonomyFeatures);
+        for (DendrogramNode node : getAllNodes()) {
+
+            List<Refinement> path = getPath(node);
+
+            List<Refinement> visitedFeatures = new ArrayList<Refinement>();
+            List<Refinement> unvisitedFeatures = new ArrayList<Refinement>();
+            visitedFeatures.addAll(path);
+            unvisitedFeatures.addAll(allRefinements);
             unvisitedFeatures.removeAll(visitedFeatures);
 
             List<Formula> formulas = new ArrayList<Formula>();
-            for (TaxonomyFeature visitedFeature : visitedFeatures) {
-                formulas.add(variableMapping.get(visitedFeature));
+            for (Refinement visitedFeature : visitedFeatures) {
+                formulas.add(variableMapping.get(visitedFeature.getName()));
             }
 
-            for (TaxonomyFeature unvisitedFeature : unvisitedFeatures) {
-                formulas.add(factory.not(variableMapping.get(unvisitedFeature)));
+            for (Refinement unvisitedFeature : unvisitedFeatures) {
+                formulas.add(factory.not(variableMapping.get(unvisitedFeature.getName())));
             }
 
             formulas.add(baseVariable);
@@ -128,18 +111,6 @@ public class Taxonomy {
         complete = complete.transform(new BDDCNFTransformation());
         return complete;
 
-    }
-
-    @Override
-    public String toString() {
-
-        String tax = "";
-        for (TaxonomyEdge edge : edges) {
-
-            tax += (edge.getStart().toString() + " --" + edge.getFeature().getName() + "--> " + edge.getEnd().toString() + "\n");
-
-        }
-        return tax;
     }
 
 

@@ -1,7 +1,6 @@
 package tva.kastel.kit.taxonomy;
 
 
-import javafx.scene.control.TreeItem;
 import tva.kastel.kit.core.io.reader.ReaderManager;
 import tva.kastel.kit.core.io.writer.dimacs.DimacsWriter;
 import tva.kastel.kit.core.io.writer.gson.GsonExportService;
@@ -9,14 +8,10 @@ import tva.kastel.kit.core.io.writer.taxonomy.TaxonomyWriter;
 import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.taxonomy.mining.TaxonomyMiner;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
-import tva.kastel.kit.ui.util.FileWrapper;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Main {

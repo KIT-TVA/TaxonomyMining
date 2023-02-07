@@ -16,6 +16,10 @@ public abstract class AbstractTree implements Tree {
     public int getSize() {
         // temp starts with 1 which represents the root not itself
         int temp = 1;
+        if (root == null) {
+            return temp;
+        }
+
         for (Node node : root.getChildren()) {
             temp += node.getNumberOfChildren();
         }
