@@ -107,7 +107,7 @@ public class PythonFileReader extends AbstractArtifactReader {
     }
 
     private String getName(JsonElement element) {
-        if (element.toString().length() > 2) {
+        if (element.toString().startsWith(Const.QUOTATION)) {
             return element.toString().substring(1, element.toString().length() - 1);
         }
         return element.toString();

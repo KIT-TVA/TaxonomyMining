@@ -9,7 +9,7 @@ public class PAdjustArray extends TreeAdjuster {
     @Override
     protected void adjust(Node node, Node parent, String nodeType) {
         if (nodeType.equals(Const.SUBSCRIPT)) {
-            Node arrayAcces = new NodeImpl(Const.ARR_ACCESS_EXPR, parent);
+            Node arrayAccess = new NodeImpl(Const.ARR_ACCESS_EXPR, parent);
             String array = Const.EMPTY;
             String access = Const.EMPTY;
             for (Node child: node.getChildren()) {
@@ -19,8 +19,8 @@ public class PAdjustArray extends TreeAdjuster {
                     array = child.getChildren().get(0).getValueAt(0);
                 }
             }
-            arrayAcces.addAttribute(Const.VALUE, access);
-            Node nameExpr = new NodeImpl(Const.NAME_EXPR, arrayAcces);
+            arrayAccess.addAttribute(Const.VALUE, access);
+            Node nameExpr = new NodeImpl(Const.NAME_EXPR, arrayAccess);
             nameExpr.addAttribute(Const.NAME_BIG, array);
             node.cut();
         }
