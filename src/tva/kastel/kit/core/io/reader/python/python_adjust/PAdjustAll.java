@@ -60,6 +60,9 @@ public class PAdjustAll extends TreeAdjuster {
 		TreeAdjuster arrayAdjuster = new PAdjustArray();
 		arrayAdjuster.recursiveAdjust(rootNode);
 
+		TreeAdjuster unaryAdjuster = new PAdjustUnary();
+		unaryAdjuster.recursiveAdjust(rootNode);
+
 	}
 	
 	@Override
