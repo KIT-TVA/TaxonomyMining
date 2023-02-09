@@ -45,6 +45,9 @@ public class PAdjustAll extends TreeAdjuster {
 		TreeAdjuster binaryAdjuster = new PAdjustBinaryExpr();
 		binaryAdjuster.recursiveAdjust(rootNode);
 
+		TreeAdjuster unaryAdjuster = new PAdjustUnary();
+		unaryAdjuster.recursiveAdjust(rootNode);
+
 		TreeAdjuster compareAdjuster = new PAdjustCompare();
 		compareAdjuster.recursiveAdjust(rootNode);
 
@@ -59,9 +62,6 @@ public class PAdjustAll extends TreeAdjuster {
 
 		TreeAdjuster arrayAdjuster = new PAdjustArray();
 		arrayAdjuster.recursiveAdjust(rootNode);
-
-		TreeAdjuster unaryAdjuster = new PAdjustUnary();
-		unaryAdjuster.recursiveAdjust(rootNode);
 
 	}
 	
