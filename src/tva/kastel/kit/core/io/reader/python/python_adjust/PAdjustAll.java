@@ -45,6 +45,9 @@ public class PAdjustAll extends TreeAdjuster {
 		TreeAdjuster binaryAdjuster = new PAdjustBinaryExpr();
 		binaryAdjuster.recursiveAdjust(rootNode);
 
+		TreeAdjuster compareAdjuster = new PAdjustCompare();
+		compareAdjuster.recursiveAdjust(rootNode);
+
 		TreeAdjuster returnAdjuster = new PAdjustReturn();
 		returnAdjuster.recursiveAdjust(rootNode);
 

@@ -16,7 +16,7 @@ public class PAdjustBinaryExpr extends TreeAdjuster {
             List<Node> removables = new ArrayList<>();
             Node operator = null;
             for (Node child : node.getChildren()) {
-                if (child.getNodeType().equals("Left") || child.getNodeType().equals("Right"))  {
+                if (child.getNodeType().equals("Left") || child.getNodeType().equals("Right")) {
                     removables.add(child);
                 }
                 if (child.getNodeType().equals("Op") && !child.getChildren().isEmpty()) {
@@ -31,28 +31,10 @@ public class PAdjustBinaryExpr extends TreeAdjuster {
             if (operator != null) {
                 operator.cut();
             }
-        } else if (nodeType.equals(Const.COMPARE)) {
-            Node binaryExpr = new NodeImpl(Const.BINARY_EXPR, parent);
-            String operator = "";
-            for (Node child : node.getChildren()) {
-                if (child.getNodeType().equals(Const.OPS) && !child.getChildren().isEmpty()) {
-                    operator = child.getChildren().get(0).getNodeType();
-                    operator = getOperatorFromNodeType(operator);
-                } else if (!child.getChildren().isEmpty()) {
-                    for (Node childChild: child.getChildren()) {
-
-                        binaryExpr.addChildWithParent(childChild.cloneNode());
-                    }
-                }
-            }
-            binaryExpr.addAttribute(Const.OPERATOR_BIG, operator);
-            node.cut();
         }
     }
-    
-    
 
-    private String getOperatorFromNodeType(String nodeType) {
+    protected String getOperatorFromNodeType(String nodeType) {
         return switch (nodeType) {
             case "Add" -> Const.PLUS;
             case "Div" -> Const.DIVIDE;
