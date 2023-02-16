@@ -4,6 +4,14 @@ import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
 import tva.kastel.kit.core.io.reader.cpp.adjust.TreeAdjuster;
 import tva.kastel.kit.core.model.interfaces.Node;
 
+
+/**
+ * This class is a subclass of TreeAdjuster.
+ * It adjusts all nodes that have something to do with unary expressions (e.g -x)
+ * It is initially called by AdjustAll.
+ *
+ * @author David Bumm
+ */
 public class PAdjustUnary extends TreeAdjuster {
     @Override
     protected void adjust(Node node, Node parent, String nodeType) {

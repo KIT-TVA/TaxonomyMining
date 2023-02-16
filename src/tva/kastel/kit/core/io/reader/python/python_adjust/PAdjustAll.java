@@ -6,6 +6,14 @@ import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
 import tva.kastel.kit.core.io.reader.cpp.adjust.TreeAdjuster;
 import tva.kastel.kit.core.model.interfaces.Node;
 
+
+/**
+ * This class is the entry point for adjusting a tree.
+ * It adjusts the root node and calls all existing TreeAdjuster to make the tree as similar as possible to
+ * a tree generated from Java source code. This class is made for a python generated AST.
+ *
+ * @author David Bumm
+ */
 public class PAdjustAll extends TreeAdjuster {
 
 

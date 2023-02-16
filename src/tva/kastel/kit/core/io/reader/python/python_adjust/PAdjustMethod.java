@@ -6,13 +6,21 @@ import tva.kastel.kit.core.model.interfaces.Node;
 
 import java.util.Objects;
 
+
+/**
+ * This class is a subclass of TreeAdjuster.
+ * It adjusts all nodes that have something to do with method declarations.
+ * It is initially called by AdjustAll.
+ *
+ * @author David Bumm
+ */
+
+
 public class PAdjustMethod extends TreeAdjuster {
     @Override
     protected void adjust(Node node, Node parent, String nodeType) {
+
         addReturnType(node, parent, nodeType);
-
-
-
     }
 
 

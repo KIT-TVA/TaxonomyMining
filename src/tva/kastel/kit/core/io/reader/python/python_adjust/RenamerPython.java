@@ -9,9 +9,9 @@ import java.util.Map;
 
 
 /**
- * This class is made for renaming NodeTypes for the parsed Tree of python source code.
- * The NodeTypes are renamed, so they are more similar to the NodeTypes of Java source code
- * and can be easier compared to Java source code
+ * This class is made for renaming NodeTypes and Attributes for the parsed Tree of python source code.
+ * The NodeTypes and Attributes are renamed, so they are more similar to the NodeTypes and Attributes
+ * of Java source code. This makes it easier to compare java and python source code.
  *
  * @author david bumm
  */

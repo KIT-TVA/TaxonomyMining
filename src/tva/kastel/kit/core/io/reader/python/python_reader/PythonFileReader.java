@@ -19,13 +19,20 @@ import tva.kastel.kit.core.model.impl.TreeImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
 
-
+/**
+ * This class reads a given Python file, converts it into a AST and adjust it to be similar to the Java AST.
+ *
+ * @author David Bumm
+ */
 public class PythonFileReader extends AbstractArtifactReader {
 
     public static String[] SUPPORTED_FILE_ENDINGS = {Const.PY};
 
     private final FileToTreeReader fileToTree;
 
+    /**
+     * Constructor
+     */
     public PythonFileReader() {
         super(SUPPORTED_FILE_ENDINGS);
         fileToTree = new FileToTreeReader();
@@ -33,11 +40,6 @@ public class PythonFileReader extends AbstractArtifactReader {
 
     @Override
     public Tree readArtifact(File element) {
-        String fileName = Paths.get(element.getAbsolutePath()).getFileName().toString();
-        return readArtifact(element, fileName);
-    }
-
-    public Tree readArtifact(File element, String rootName) {
         Node rootNode = new NodeImpl(Const.PYTHON);
         String path = element.getAbsolutePath();
         path = Const.QUOTATION + path.replace(Const.BACKSLASH, Const.DIVIDE_OP) + Const.QUOTATION;
@@ -108,6 +110,7 @@ public class PythonFileReader extends AbstractArtifactReader {
 
     private String getName(JsonElement element) {
         if (element.toString().startsWith(Const.QUOTATION)) {
+            //remove quotations
             return element.toString().substring(1, element.toString().length() - 1);
         }
         return element.toString();

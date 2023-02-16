@@ -8,7 +8,13 @@ import tva.kastel.kit.core.model.interfaces.Node;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This class is a subclass of TreeAdjuster.
+ * It adjusts all nodes that have something to do with import statements.
+ * It is initially called by AdjustAll.
+ *
+ * @author David Bumm
+ */
 public class PAdjustImports extends TreeAdjuster {
 
 	@Override

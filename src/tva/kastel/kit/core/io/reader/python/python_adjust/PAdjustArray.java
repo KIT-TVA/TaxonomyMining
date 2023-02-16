@@ -5,6 +5,15 @@ import tva.kastel.kit.core.io.reader.cpp.adjust.TreeAdjuster;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 
+
+/**
+ * This class is a subclass of TreeAdjuster. It adjusts everything that has to
+ * do with arrays. This class covers normal array accesses (e.g arr[i]) just
+ * like expressions inside array accesses (e.g arr(i * j + 5)). It is initially called by
+ * PAdjustAll.
+ *
+ * @author David Bumm
+ */
 public class PAdjustArray extends TreeAdjuster {
     @Override
     protected void adjust(Node node, Node parent, String nodeType) {

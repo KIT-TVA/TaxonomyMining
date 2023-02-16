@@ -6,6 +6,13 @@ import tva.kastel.kit.core.io.reader.cpp.adjust.TreeAdjuster;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 
+/**
+ * This class is a subclass of TreeAdjuster.
+ * It adjusts all nodes that have something to do with value assignments.
+ * It is initially called by AdjustAll.
+ *
+ * @author David Bumm
+ */
 public class PAdjustAssignment extends TreeAdjuster {
 
 	@Override

@@ -3,8 +3,18 @@ package tva.kastel.kit.core.io.reader.python.python_reader;
 import jep.Interpreter;
 import jep.SharedInterpreter;
 
+/**
+ * This class uses Jep (Java embedded python) to parse a python file into an abstract syntax tree (AST).
+ *
+ * @author David Bumm
+ */
 public class FileToTreeReader {
 
+    /**
+     * this method uses Jep to parse the provided python file into a string of the AST.
+     * @param path the absolute path to the desired python file
+     * @return The AST as a String
+     */
     public String getTreeFromFileAsString(String path) {
         try (Interpreter inter = new SharedInterpreter()) {
             inter.exec("import ast");
@@ -20,6 +30,11 @@ public class FileToTreeReader {
 
     }
 
+    /**
+     * this method uses Jep to parse the provided python file into a JSON string of the AST.
+     * @param path the absolute path to the desired python file
+     * @return The AST as a String in the JSON format
+     */
     public String getTreeFromFileAsJSON(String path) {
         try (Interpreter inter = new SharedInterpreter()) {
             inter.exec("import json");
