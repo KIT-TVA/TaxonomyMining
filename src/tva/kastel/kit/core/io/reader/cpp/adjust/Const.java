@@ -190,8 +190,8 @@ public class Const {
     public static final String LABEL_STMT = "LabeledStmt";
     public static final String EMPTY_STMT_SMALL = "empty_stmt";
     public static final String EMPTY_STMT_BIG = "EmptyStmt";
-    public static final String CONTINUTE_SMALL = "continue";
-    public static final String CONTINUTE_BIG = "Continue";
+    public static final String CONTINUE_SMALL = "continue";
+    public static final String CONTINUE_BIG = "Continue";
     public static final String DO = "do";
     public static final String DO_STMT = "DoStmt";
     public static final String WHILE_STMT = "WhileStmt";

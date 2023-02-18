@@ -51,7 +51,7 @@ public final class RenamerCpp {
         map.put(Const.DO, Const.DO_STMT);
         map.put(Const.RETURN, Const.RETURN_STMT);
         map.put(Const.BREAK_SMALL, Const.BREAK_BIG);
-        map.put(Const.CONTINUTE_SMALL, Const.CONTINUTE_BIG);
+        map.put(Const.CONTINUE_SMALL, Const.CONTINUE_BIG);
         map.put(Const.EMPTY_STMT_SMALL, Const.EMPTY_STMT_BIG);
         map.put(Const.LABEL, Const.LABEL_STMT);
         map.put(Const.SWITCH, Const.SWITCH_STMT);

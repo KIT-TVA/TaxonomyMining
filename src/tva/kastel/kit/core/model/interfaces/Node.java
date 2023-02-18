@@ -114,6 +114,9 @@ public interface Node {
      */
     public List<Node> getNodesOfType(String nodeType);
 
+    /**
+     * This method adds a child node to the current node  and sets the parent.
+     */
     public void addChildWithParent(Node child);
 
     /**
