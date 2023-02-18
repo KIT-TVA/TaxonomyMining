@@ -6,6 +6,7 @@ import com.github.javaparser.ast.modules.*;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.LabeledStmt;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
 import tva.kastel.kit.core.io.reader.java.JavaAttributesTypes;
 import tva.kastel.kit.core.io.reader.java.JavaNodeTypes;
 import tva.kastel.kit.core.model.enums.NodeType;
@@ -28,13 +29,19 @@ public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
         arg.setEndLine(n.getRange().get().end.line);
 
         // JavaDoc Comments are no child nodes. Therefore they are added explicitly.
-        n.getComment().ifPresent(comment -> arg.addAttribute(JavaAttributesTypes.Comment.name(), new StringValueImpl(comment.getContent())));
+        n.getComment().ifPresent(comment -> addComment(arg, comment.getContent()));
+
         NodeList<com.github.javaparser.ast.Node> exceptionList = NodeList.nodeList(exceptions);
         for (com.github.javaparser.ast.Node childNode : n.getChildNodes()) {
             if (!exceptionList.contains(childNode)) {
                 childNode.accept(this, arg);
             }
         }
+    }
+
+    private void addComment(Node node, String comment) {
+        Node lineComment = new NodeImpl(Const.LINE_COMMENT, node);
+        lineComment.addAttribute(Const.COMMENT_BIG, comment);
     }
 
     @Override
@@ -44,7 +51,6 @@ public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
 
     @Override
     public void visit(ExpressionStmt n, Node arg) {
-        // TODO Auto-generated method stub
         visitor(n, arg);
     }
 
@@ -57,43 +63,36 @@ public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
 
     @Override
     public void visit(ModuleDeclaration n, Node arg) {
-        // TODO Auto-generated method stub
         visitor(n, arg);
     }
 
     @Override
     public void visit(ModuleRequiresDirective n, Node arg) {
-        // TODO Auto-generated method stub
         visitor(n, arg);
     }
 
     @Override
     public void visit(ModuleExportsDirective n, Node arg) {
-        // TODO Auto-generated method stub
         visitor(n, arg);
     }
 
     @Override
     public void visit(ModuleProvidesDirective n, Node arg) {
-        // TODO Auto-generated method stub
         visitor(n, arg);
     }
 
     @Override
     public void visit(ModuleUsesDirective n, Node arg) {
-        // TODO Auto-generated method stub
         visitor(n, arg);
     }
 
     @Override
     public void visit(ModuleOpensDirective n, Node arg) {
-        // TODO Auto-generated method stub
         visitor(n, arg);
     }
 
     @Override
     public void visit(PatternExpr n, Node arg) {
-        // TODO Auto-generated method stub
         visitor(n, arg);
     }
 }

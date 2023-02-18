@@ -3,6 +3,7 @@ package tva.kastel.kit.core.io.reader.java;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import tva.kastel.kit.core.io.reader.AbstractArtifactReader;
+import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
 import tva.kastel.kit.core.io.reader.java.factory.NodeFactory;
 import tva.kastel.kit.core.io.reader.java.factory.StatementNodeFactory;
 import tva.kastel.kit.core.model.enums.NodeType;
@@ -55,6 +56,7 @@ public class JavaReader extends AbstractArtifactReader {
             try {
                 s = Files.readString(Paths.get(element.getAbsolutePath()), StandardCharsets.ISO_8859_1);
             } catch (IOException e) {
+                //TODO: why catch exception, just to throw an exception ???
                 throw new RuntimeException(e);
             }
             String fileName = Paths.get(element.getAbsolutePath()).getFileName().toString();
@@ -63,11 +65,12 @@ public class JavaReader extends AbstractArtifactReader {
             JavaVisitor visitor = new JavaVisitor(new NodeFactory(new StatementNodeFactory()));
             visitor.visit(cu, rootNode);
 
+            /* TODO: this looks VERY UNNECESSARY and causes an EMPTY COMMENT in the rootNode
             for (Node child : rootNode.getChildren()) {
-                if (child.getNodeType().equals("CompilationUnit")) {
+                if (child.getNodeType().equals(Const.C_UNIT)) {
                     addNameIfEmptyCompilationUnit(child, fileName);
                 }
-            }
+            } */
 
 
             tree = new TreeImpl(fileName, rootNode);
@@ -78,21 +81,21 @@ public class JavaReader extends AbstractArtifactReader {
 
     private void addNameIfEmptyCompilationUnit(Node compilationUnit, String fileName) {
 
-        Attribute name = compilationUnit.getAttributeForKey("Name");
+        Attribute name = compilationUnit.getAttributeForKey(Const.NAME_BIG);
 
         if (name == null) {
-            compilationUnit.addAttribute(new AttributeImpl("Name", new StringValueImpl(fileName.replace(".java", ""))));
+            compilationUnit.addAttribute(new AttributeImpl(Const.NAME_BIG, new StringValueImpl(fileName.replace(".java", ""))));
         }
 
-        Attribute comment = compilationUnit.getAttributeForKey("Comment");
+        Attribute comment = compilationUnit.getAttributeForKey(Const.COMMENT_BIG);
 
         if (comment == null) {
-            Attribute newComment = new AttributeImpl("Comment");
+            Attribute newComment = new AttributeImpl(Const.COMMENT_BIG);
             List<Node> childrenToRemove = new ArrayList<>();
             for (Node child : compilationUnit.getChildren()) {
                 if (child.getNodeType().equals("BlockComment")) {
 
-                    List<Value> values = child.getAttributeForKey("Comment").getAttributeValues();
+                    List<Value> values = child.getAttributeForKey(Const.COMMENT_BIG).getAttributeValues();
 
                     for (Value value : values) {
                         newComment.addAttributeValue(value);
@@ -105,6 +108,5 @@ public class JavaReader extends AbstractArtifactReader {
             compilationUnit.getChildren().removeAll(childrenToRemove);
             compilationUnit.addAttribute(newComment);
         }
-
     }
 }
