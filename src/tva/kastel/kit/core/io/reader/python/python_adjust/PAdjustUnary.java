@@ -30,16 +30,4 @@ public class PAdjustUnary extends TreeAdjuster {
             node.addAttribute(Const.OPERATOR_BIG, operator);
         }
     }
-
-
-    private String getOperatorFromNodeType(String nodeType) {
-        return switch (nodeType) {
-            case "Not" -> Const.LOGICAL_COMP;
-            case "USub" -> Const.MINUS;
-            case "UAdd" -> Const.PLUS;
-            case "Invert" -> Const.BITWISE_COMP;
-
-            default -> nodeType;
-        };
-    }
 }

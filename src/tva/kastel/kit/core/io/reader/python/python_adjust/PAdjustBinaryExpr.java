@@ -33,20 +33,4 @@ public class PAdjustBinaryExpr extends TreeAdjuster {
             }
         }
     }
-
-    protected String getOperatorFromNodeType(String nodeType) {
-        return switch (nodeType) {
-            case "Add" -> Const.PLUS;
-            case "Div" -> Const.DIVIDE;
-            case "Mult" -> Const.MULTIPLY;
-            case "Sub" -> Const.MINUS;
-            case "Eq" -> Const.EQUALS;
-            case "NotEq" -> Const.NOT_EQUALS;
-            case "Gt" -> Const.GREATER;
-            case "GtE" -> Const.GREATER_EQUALS;
-            case "Lt" -> Const.LESS;
-            case "LtE" -> Const.LESS_EQUALS;
-            default -> nodeType;
-        };
-    }
 }

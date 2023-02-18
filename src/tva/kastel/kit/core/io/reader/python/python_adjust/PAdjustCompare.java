@@ -5,7 +5,7 @@ import tva.kastel.kit.core.io.reader.cpp.adjust.TreeAdjuster;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 
-public class PAdjustCompare extends PAdjustBinaryExpr {
+public class PAdjustCompare extends TreeAdjuster {
     @Override
     protected void adjust(Node node, Node parent, String nodeType) {
         if (nodeType.equals(Const.COMPARE)) {

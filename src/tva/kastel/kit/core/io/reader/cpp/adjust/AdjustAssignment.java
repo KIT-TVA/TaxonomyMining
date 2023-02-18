@@ -62,47 +62,41 @@ public class AdjustAssignment extends TreeAdjuster {
 
 
     private String combineToString(List<Node> nodes) {
-        String value = Const.EMPTY;
+        StringBuilder value = new StringBuilder(Const.EMPTY);
         for (Node node : nodes) {
             if (!node.getAttributes().isEmpty()) {
                 if (node.getNodeType().equals(Const.ARR_ACCESS_EXPR)) {
                     String text = node.getChildren().get(0).getValueAt(0);
                     text += "[" + node.getValueAt(0) + "]";
-                    value += text;
+                    value.append(text);
                 } else if (node.getNodeType().equals(Const.METHOD_CALL)) {
                     String name = node.getValueAt(0);
-                    String attributes = Const.EMPTY;
+                    StringBuilder attributes = new StringBuilder(Const.EMPTY);
                     List<Node> attrNodes = node.getChildren().get(1).getChildren();
                     for (int i = 0; i < attrNodes.size(); i++) {
                         Node attr = attrNodes.get(i).getChildren().get(0);
-                        attributes += attr.getValueAt(0);
+                        attributes.append(attr.getValueAt(0));
                         if (i + 1 != attrNodes.size()) {
-                            attributes += " ,";
+                            attributes.append(" ,");
                         }
                     }
-                    value += name + "(" + attributes + ")";
+                    value.append(name).append("(").append(attributes).append(")");
                 } else {
-                    value += node.getValueAt(0);
+                    value.append(node.getValueAt(0));
                 }
             }
         }
-        return value;
+        return value.toString();
     }
 
     private String getOperation(String op) {
-        switch (op) {
-            case Const.EQ:
-                return Const.ASSIGN;
-            case Const.PLUS_OP + Const.EQ:
-                return Const.PLUS;
-            case Const.DIVIDE_OP + Const.EQ:
-                return Const.DIVIDE;
-            case Const.MULTIPLY_OP + Const.EQ:
-                return Const.MULTIPLY;
-            case Const.MINUS_OP + Const.EQ:
-                return Const.MINUS;
-            default:
-                return Const.EMPTY;
-        }
+        return switch (op) {
+            case Const.EQ -> Const.ASSIGN;
+            case Const.PLUS_OP + Const.EQ -> Const.PLUS;
+            case Const.DIVIDE_OP + Const.EQ -> Const.DIVIDE;
+            case Const.MULTIPLY_OP + Const.EQ -> Const.MULTIPLY;
+            case Const.MINUS_OP + Const.EQ -> Const.MINUS;
+            default -> Const.EMPTY;
+        };
     }
 }

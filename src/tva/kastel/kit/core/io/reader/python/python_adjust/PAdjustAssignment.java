@@ -31,6 +31,32 @@ public class PAdjustAssignment extends TreeAdjuster {
 			}
 			variableDecl.addAttribute(Const.NAME_BIG, name);
 			parent.addChild(variableExpr, node.cut());
+		} else if(nodeType.equals(Const.AUG_ASSIGN)) {
+			Node value = null;
+			String target = Const.EMPTY;
+			String operator = Const.EMPTY;
+
+			for (Node child: node.getChildren()) {
+				if (child.getChildren().isEmpty()) {
+					continue;
+				}
+				if (child.getNodeType().equals(Const.OP)) {
+					String opNodeType = child.getChildren().get(0).getNodeType();
+					operator = getOperatorFromNodeType(opNodeType);
+				} else if (child.getNodeType().equals(Const.TARGET)) {
+					target = child.getChildren().get(0).getValueAt(0);
+				}
+				else if (child.getNodeType().equals(Const.VALUE)) {
+					value = child.getChildren().get(0);
+				}
+			}
+
+
+			node.getChildren().clear();
+			node.addChildWithParent(value);
+			node.setNodeType(Const.ASSIGNMENT);
+			node.addAttribute(Const.TARGET, target);
+			node.addAttribute(Const.OPERATOR_BIG, operator);
 		}
 
 	}

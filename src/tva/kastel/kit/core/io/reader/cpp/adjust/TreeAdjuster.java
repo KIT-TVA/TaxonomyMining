@@ -148,4 +148,24 @@ public abstract class TreeAdjuster {
         }
         node.getAttributes().get(0).setAttributeKey(Const.VALUE);
     }
+
+
+    protected String getOperatorFromNodeType(String nodeType) {
+        return switch (nodeType) {
+            case "Add", "UAdd" -> Const.PLUS;
+            case "Div" -> Const.DIVIDE;
+            case "Mult" -> Const.MULTIPLY;
+            case "Sub", "USub" -> Const.MINUS;
+            case "Eq" -> Const.EQUALS;
+            case "NotEq" -> Const.NOT_EQUALS;
+            case "Gt" -> Const.GREATER;
+            case "GtE" -> Const.GREATER_EQUALS;
+            case "Lt" -> Const.LESS;
+            case "LtE" -> Const.LESS_EQUALS;
+            case "Not" -> Const.LOGICAL_COMP;
+            case "Invert" -> Const.BITWISE_COMP;
+            default -> nodeType;
+        };
+    }
+
 }
