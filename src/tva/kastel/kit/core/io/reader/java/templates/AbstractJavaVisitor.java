@@ -14,7 +14,7 @@ import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
 
@@ -31,23 +31,49 @@ public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
         arg.setEndLine(n.getRange().get().end.line);
 
         // add non-orphan nodes as a LineComment
-   //     n.getComment().ifPresent(comment -> addComment(arg, comment.getContent()));
+        n.getComment().ifPresent(comment -> addComment(arg, comment.getContent()));
+
+
+        List<com.github.javaparser.ast.Node> children = new ArrayList<>();
+        if (!n.getOrphanComments().isEmpty() && !n.toString().equals("Stack")) {
+            children = getReorderedNodes(n);
+        } else {
+            children = n.getChildNodes();
+        }
 
 
         NodeList<com.github.javaparser.ast.Node> exceptionList = NodeList.nodeList(exceptions);
-        for (com.github.javaparser.ast.Node childNode : n.getChildNodes()) {
-            if (n.getOrphanComments().contains(childNode)) {
-                continue; //don't handle comments twice
-            }
+        for (com.github.javaparser.ast.Node childNode : children) {
             if (!exceptionList.contains(childNode)) {
-                if (childNode.toString().startsWith(Const.SLASH_TWICE)) { //Line Comments are handled here
-                    String[] arr = childNode.toString().split("\r\n");
-                    String comment = arr[0].substring(2); //comment without leading '//'
-                    addComment(arg, comment);
-                }
                 childNode.accept(this, arg);
             }
         }
+    }
+
+    private List<com.github.javaparser.ast.Node> getReorderedNodes(com.github.javaparser.ast.Node parent) {
+        int[] arr = new int[parent.getChildNodes().size()];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = getLine(parent.getChildNodes().get(i));
+        }
+        Arrays.sort(arr);
+
+        List<com.github.javaparser.ast.Node> list = new ArrayList<>();
+        for (int v : arr) {
+            for (com.github.javaparser.ast.Node child : parent.getChildNodes()) {
+                if (v == getLine(child)) {
+                    list.add(child);
+                }
+            }
+        }
+       return list;
+    }
+
+    private int getLine(com.github.javaparser.ast.Node node) {
+        String line = node.getRange().toString();
+        String[] a1 = line.split("\\(line ");
+        String[] a2 = a1[1].split(Const.COMMA);
+
+        return Integer.parseInt(a2[0]);
     }
 
     private void addComment(Node parent, String comment) {

@@ -759,8 +759,8 @@ public class JavaVisitor extends AbstractJavaVisitor {
 
     @Override
     public void visit(LineComment n, Node parent) {
-      //  Node com = new NodeImpl(NodeType.COMMENT, JavaNodeTypes.LineComment.name(), parent);
-      //  com.addAttribute(JavaAttributesTypes.Comment.name(), new StringValueImpl(n.getContent()));
+        Node com = new NodeImpl(NodeType.COMMENT, JavaNodeTypes.LineComment.name(), parent);
+        com.addAttribute(JavaAttributesTypes.Comment.name(), new StringValueImpl(n.getContent()));
     }
 
 
