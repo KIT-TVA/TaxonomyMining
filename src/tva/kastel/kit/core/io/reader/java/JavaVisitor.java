@@ -256,6 +256,11 @@ public class JavaVisitor extends AbstractJavaVisitor {
     }
 
     @Override
+    public void visit(LocalRecordDeclarationStmt n, Node arg) {
+
+    }
+
+    @Override
     public void visit(LongLiteralExpr n, Node arg) {
         createLiteralNode(n, arg, "long");
     }
@@ -379,6 +384,16 @@ public class JavaVisitor extends AbstractJavaVisitor {
     @Override
     public void visit(PrimitiveType n, Node arg) {
         arg.addAttribute(JavaAttributesTypes.Type.name(), new StringValueImpl(n.toString()));
+    }
+
+    @Override
+    public void visit(RecordDeclaration n, Node arg) {
+
+    }
+
+    @Override
+    public void visit(CompactConstructorDeclaration n, Node arg) {
+
     }
 
     @Override
@@ -744,8 +759,8 @@ public class JavaVisitor extends AbstractJavaVisitor {
 
     @Override
     public void visit(LineComment n, Node parent) {
-        Node com = new NodeImpl(NodeType.COMMENT, JavaNodeTypes.LineComment.name(), parent);
-        com.addAttribute(JavaAttributesTypes.Comment.name(), new StringValueImpl(n.getContent()));
+      //  Node com = new NodeImpl(NodeType.COMMENT, JavaNodeTypes.LineComment.name(), parent);
+      //  com.addAttribute(JavaAttributesTypes.Comment.name(), new StringValueImpl(n.getContent()));
     }
 
 

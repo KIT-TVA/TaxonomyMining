@@ -14,6 +14,8 @@ import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 
+import java.util.ArrayList;
+
 public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
 
     /**
@@ -28,19 +30,28 @@ public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
         arg.setStartLine(n.getRange().get().begin.line);
         arg.setEndLine(n.getRange().get().end.line);
 
-        // JavaDoc Comments are no child nodes. Therefore they are added explicitly.
-        n.getComment().ifPresent(comment -> addComment(arg, comment.getContent()));
+        // add non-orphan nodes as a LineComment
+   //     n.getComment().ifPresent(comment -> addComment(arg, comment.getContent()));
+
 
         NodeList<com.github.javaparser.ast.Node> exceptionList = NodeList.nodeList(exceptions);
         for (com.github.javaparser.ast.Node childNode : n.getChildNodes()) {
+            if (n.getOrphanComments().contains(childNode)) {
+                continue; //don't handle comments twice
+            }
             if (!exceptionList.contains(childNode)) {
+                if (childNode.toString().startsWith(Const.SLASH_TWICE)) { //Line Comments are handled here
+                    String[] arr = childNode.toString().split("\r\n");
+                    String comment = arr[0].substring(2); //comment without leading '//'
+                    addComment(arg, comment);
+                }
                 childNode.accept(this, arg);
             }
         }
     }
 
-    private void addComment(Node node, String comment) {
-        Node lineComment = new NodeImpl(Const.LINE_COMMENT, node);
+    private void addComment(Node parent, String comment) {
+        Node lineComment = new NodeImpl(Const.LINE_COMMENT, parent);
         lineComment.addAttribute(Const.COMMENT_BIG, comment);
     }
 
