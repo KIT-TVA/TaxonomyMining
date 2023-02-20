@@ -33,7 +33,6 @@ public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
         // add non-orphan nodes as a LineComment
         n.getComment().ifPresent(comment -> addComment(arg, comment.getContent()));
 
-
         List<com.github.javaparser.ast.Node> children = new ArrayList<>();
         if (!n.getOrphanComments().isEmpty() && !n.toString().equals("Stack")) {
             children = getReorderedNodes(n);
@@ -65,7 +64,7 @@ public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
                 }
             }
         }
-       return list;
+        return list;
     }
 
     private int getLine(com.github.javaparser.ast.Node node) {
@@ -76,10 +75,31 @@ public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
         return Integer.parseInt(a2[0]);
     }
 
-    private void addComment(Node parent, String comment) {
-        Node lineComment = new NodeImpl(Const.LINE_COMMENT, parent);
+    private void addComment(Node node, String comment) {
+        Node lineComment = new NodeImpl(Const.LINE_COMMENT);
         lineComment.addAttribute(Const.COMMENT_BIG, comment);
+
+        int position = 0;
+        Node parent = node;
+        while (!parent.getNodeType().equals(Const.BODY) && !parent.getNodeType().equals(Const.C_UNIT)) {
+            if (parent.getParent() == null) {
+                parent = node;
+                break;
+            }
+            position = parent.getPosition();
+            parent = parent.getParent();
+        }
+
+        if (parent.equals(node)) {
+            parent.addChildWithParent(lineComment);
+        } else {
+            System.out.println(position);
+            parent.addChild(lineComment, position);
+        }
+
+
     }
+
 
     @Override
     public void visit(NodeList n, Node arg) {
