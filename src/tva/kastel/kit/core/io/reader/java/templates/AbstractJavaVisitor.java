@@ -93,7 +93,6 @@ public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
         if (parent.equals(node)) {
             parent.addChildWithParent(lineComment);
         } else {
-            System.out.println(position);
             parent.addChild(lineComment, position);
         }
 
