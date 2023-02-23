@@ -40,26 +40,26 @@ public final class RenamerPython {
     }
 
     private void fillAttrMap() {
-        attrMap.put("id", Const.NAME_BIG);
+        attrMap.put(Const.ID, Const.NAME_BIG);
         attrMap.put(Const.VALUE.toLowerCase(), Const.VALUE);
         attrMap.put(Const.NAME_SMALL, Const.NAME_BIG);
     }
 
     private void fillNodeMap() {
-        nodeMap.put("Module", Const.C_UNIT);
-        nodeMap.put("FunctionDef", Const.M_DECL);
-        nodeMap.put("If", Const.IF_STMT_BIG);
-        nodeMap.put("Return", Const.RETURN_STMT);
-        nodeMap.put("Assign", Const.ASSIGNMENT);
-        nodeMap.put("Test", Const.CONDITION_BIG);
-        nodeMap.put("Arguments", Const.ARGUMENT_BIG);
-        nodeMap.put("Arg", Const.ARGUMENT_BIG);
+        nodeMap.put(Const.MODULE, Const.C_UNIT);
+        nodeMap.put(Const.FUNCTION_DEF, Const.M_DECL);
+        nodeMap.put(Const.IF_BIG, Const.IF_STMT_BIG);
+        nodeMap.put(Const.RETURN_BIG, Const.RETURN_STMT);
+        nodeMap.put(Const.ASSIGN_BIG, Const.ASSIGNMENT);
+        nodeMap.put(Const.TEST, Const.CONDITION_BIG);
+        nodeMap.put(Const.ARGUMENTS, Const.ARGUMENT_BIG);
+        nodeMap.put(Const.ARG, Const.ARGUMENT_BIG);
         nodeMap.put(Const.OR_ELSE, Const.ELSE_BIG);
-        nodeMap.put("BinOp", Const.BINARY_EXPR);
-        nodeMap.put("Iter", Const.CONDITION_BIG);
-        nodeMap.put("For", Const.FOR_STMT);
+        nodeMap.put(Const.BIN_OP, Const.BINARY_EXPR);
+        nodeMap.put(Const.ITER, Const.CONDITION_BIG);
+        nodeMap.put(Const.FOR_BIG, Const.FOR_STMT);
         nodeMap.put(Const.NAME_BIG, Const.NAME_EXPR);
-        nodeMap.put("While", Const.WHILE_STMT);
+        nodeMap.put(Const.WHILE_BIG, Const.WHILE_STMT);
         nodeMap.put(Const.UNARY_OP, Const.UNARY_EXPR);
     }
 

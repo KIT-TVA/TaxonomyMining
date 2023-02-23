@@ -23,18 +23,18 @@ public class PAdjustImports extends TreeAdjuster {
 			boolean hasImports = false;
 			List<Node> oldImportNodes = new ArrayList<>();
 			for (Node child: node.getChildren()) {
-				if (child.getNodeType().equals("Import") || child.getNodeType().equals("ImportFrom")) {
+				if (child.getNodeType().equals(Const.IMPORT) || child.getNodeType().equals(Const.IMPORT_FROM)) {
 					hasImports = true;
 					oldImportNodes.add(child);
 					
 				}
 			}
 			if (hasImports) {
-				Node imports = new NodeImpl("Imports");
+				Node imports = new NodeImpl(Const.IMPORTS);
 				imports.setParent(node);
 				node.addChild(imports, 0);
 				for (Node oldImport: oldImportNodes) {
-					oldImport.setNodeType("Import");
+					oldImport.setNodeType(Const.IMPORT);
 					String value = oldImport.getChildren().get(0).getChildren().get(0).getValueAt(0);
 					oldImport.addAttribute(Const.NAME_BIG, value);
 					oldImport.getChildren().clear();
