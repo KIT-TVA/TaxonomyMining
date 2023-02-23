@@ -227,6 +227,8 @@ public class Const {
     public static final String LOGICAL_COMP = "LOGICAL_COMPLEMENT";
     public static final String BITWISE_COMP = "BITWISE_COMPLEMENT";
     public static final String AUG_ASSIGN = "AugAssign";
+    public static final String BOOL_OP = "BoolOp";
+    public static final String VALUES = "Values";
 
     //Baned Python String
     public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno", "level", "lineno", "n", "s");

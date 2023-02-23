@@ -19,7 +19,7 @@ public class PAdjustBinaryExpr extends TreeAdjuster {
                 if (child.getNodeType().equals("Left") || child.getNodeType().equals("Right")) {
                     removables.add(child);
                 }
-                if (child.getNodeType().equals("Op") && !child.getChildren().isEmpty()) {
+                if (child.getNodeType().equals(Const.OP) && !child.getChildren().isEmpty()) {
                     String op = getOperatorFromNodeType(child.getChildren().get(0).getNodeType());
                     node.addAttribute(Const.OPERATOR_BIG, op);
                     operator = child;
@@ -31,6 +31,26 @@ public class PAdjustBinaryExpr extends TreeAdjuster {
             if (operator != null) {
                 operator.cut();
             }
+        }
+        if (nodeType.equals(Const.BOOL_OP)) {
+           node.setNodeType(Const.BINARY_EXPR);
+           List<Node> children = new ArrayList<>();
+
+            String operator = Const.EMPTY;
+            for (Node child: node.getChildren()) {
+                if (child.getNodeType().equals(Const.OP) && !child.getChildren().isEmpty()) {
+                    operator = getOperatorFromNodeType(child.getChildren().get(0).getNodeType());
+                } else if (child.getNodeType().equals(Const.VALUES) && !child.getChildren().isEmpty()) {
+                    children.addAll(child.getChildren());
+                }
+            }
+            node.getChildren().clear();
+            for (Node child: children) {
+                node.addChildWithParent(child);
+            }
+
+            node.addAttribute(Const.OPERATOR_BIG, operator);
+
         }
     }
 }
