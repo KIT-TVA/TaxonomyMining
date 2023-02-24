@@ -10,6 +10,7 @@ import com.github.javaparser.ast.nodeTypes.NodeWithArguments;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.*;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
 import tva.kastel.kit.core.io.reader.java.factory.JavaReaderUtil;
 import tva.kastel.kit.core.io.reader.java.factory.NodeFactory;
 import tva.kastel.kit.core.io.reader.java.templates.AbstractJavaVisitor;
@@ -256,6 +257,11 @@ public class JavaVisitor extends AbstractJavaVisitor {
     }
 
     @Override
+    public void visit(LocalRecordDeclarationStmt n, Node arg) {
+
+    }
+
+    @Override
     public void visit(LongLiteralExpr n, Node arg) {
         createLiteralNode(n, arg, "long");
     }
@@ -379,6 +385,16 @@ public class JavaVisitor extends AbstractJavaVisitor {
     @Override
     public void visit(PrimitiveType n, Node arg) {
         arg.addAttribute(JavaAttributesTypes.Type.name(), new StringValueImpl(n.toString()));
+    }
+
+    @Override
+    public void visit(RecordDeclaration n, Node arg) {
+
+    }
+
+    @Override
+    public void visit(CompactConstructorDeclaration n, Node arg) {
+
     }
 
     @Override
@@ -769,6 +785,17 @@ public class JavaVisitor extends AbstractJavaVisitor {
     }
 
     private Node createLiteralNode(com.github.javaparser.ast.Node n, Node arg, String dataType) {
+        //handle FloatLiteralExpr
+        if (arg.getNodeType().equals(Const.VARIABLE_DECL)) {
+            String type = arg.getValueAt(0);
+            if (type.equals(Const.FLOAT)) {
+                Node literalNode = new NodeImpl(Const.FLOAT_LIT, arg);
+                literalNode.addAttribute(Const.TYPE_BIG, Const.FLOAT);
+                literalNode.addAttribute(Const.VALUE, n.toString());
+                return literalNode;
+            }
+        }
+
         Node literalNode = new NodeImpl(NodeType.LITERAL, JavaNodeTypes.getFromClass(n.getClass()).name(), arg);
         literalNode.addAttribute(JavaAttributesTypes.Type.name(), new StringValueImpl(dataType));
         literalNode.addAttribute(JavaAttributesTypes.Value.name(), new StringValueImpl(n.toString()));

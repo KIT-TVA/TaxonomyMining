@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class contains only constants used for the adjustment of cpp Node Types
+ * This class contains only constants used for the adjustment of cpp and python Node Types
  *
  * @author David Bumm
  */
 public class Const {
-    public static final String C_PLUS_PLUS = "JAVA"; //TODO change this to cpp
+    public static final String C_PLUS_PLUS = "CPP";
     public static final String PY = "py";
     public static final String PYTHON = "Python";
     public static final String CPP = "cpp";
@@ -107,6 +107,8 @@ public class Const {
     //operators
     public static final String LESS = "LESS";
     public static final String GREATER = "GREATER";
+    public static final String EQUALS = "EQUALS";
+    public static final String NOT_EQUALS = "NOT_EQUALS";
     public static final String GREATER_EQUALS = "GREATER_EQUALS";
     public static final String LESS_EQUALS = "LESS_EQUALS";
     public static final String DIVIDE = "DIVIDE";
@@ -188,8 +190,8 @@ public class Const {
     public static final String LABEL_STMT = "LabeledStmt";
     public static final String EMPTY_STMT_SMALL = "empty_stmt";
     public static final String EMPTY_STMT_BIG = "EmptyStmt";
-    public static final String CONTINUTE_SMALL = "continue";
-    public static final String CONTINUTE_BIG = "Continue";
+    public static final String CONTINUE_SMALL = "continue";
+    public static final String CONTINUE_BIG = "Continue";
     public static final String DO = "do";
     public static final String DO_STMT = "DoStmt";
     public static final String WHILE_STMT = "WhileStmt";
@@ -206,10 +208,51 @@ public class Const {
     public static final String BACKSLASH = "\\";
     public static final String QUOTATION = "\"";
     public static final String _TYPE = "_type";
+    public static final String RETURNS = "Returns";
+    public static final String VOID = "void";
+    public static final String ARGS = "Args";
+    public static final String ARG = "Arg";
+    public static final String ANNOTATION = "Annotation";
+    public static final String OR_ELSE = "Orelse";
+    public static final String COMPARE = "Compare";
+    public static final String OPS = "Ops";
+    public static final String OP = "Op";
+    public static final String CONSTANT = "Constant";
+    public static final String EXC = "Exc";
+    public static final String EXCEPTION = "Exception";
+    public static final String SUBSCRIPT = "Subscript";
+    public static final String SLICE = "Slice";
+    public static final String UNARY_OP = "UnaryOp";
+    public static final String OPERAND = "Operand";
+    public static final String LOGICAL_COMP = "LOGICAL_COMPLEMENT";
+    public static final String BITWISE_COMP = "BITWISE_COMPLEMENT";
+    public static final String AUG_ASSIGN = "AugAssign";
+    public static final String BOOL_OP = "BoolOp";
+    public static final String VALUES = "Values";
+    public static final String IMPORT = "Import";
+    public static final String IMPORTS = "Imports";
+    public static final String IMPORT_FROM = "ImportFrom";
+    public static final String FUNC = "Func";
+    public static final String CALL_BIG = "Call";
+    public static final String EXPR_BIG = "Expr";
+    public static final String ID = "id";
+    public static final String WHILE_BIG = "While";
+    public static final String FOR_BIG = "For";
+    public static final String ITER = "Iter";
+    public static final String MODULE = "Module";
+    public static final String FUNCTION_DEF = "FunctionDef";
+    public static final String IF_BIG = "If";
+    public static final String RETURN_BIG = "Return";
+    public static final String ASSIGN_BIG = "Assign";
+    public static final String TEST = "Test";
+    public static final String ARGUMENTS = "Arguments";
+    public static final String BIN_OP = "BinOp";
 
     //Baned Python String
-    public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno", "level", "lineno", "n", "s");
-    public static final List<String> BANED_NODES = Arrays.asList("ctx", "type_ignores", "decorator_list", "defaults", "kw_defaults", "kwonlyargs", "posonlyargs", "Load", "Store", "keywords");
+    public static final List<String> BANED_ATTRIBUTES = Arrays.asList("col_offset", "end_col_offset", "end_lineno",
+            "level", "lineno", "n", "s", "is_async");
+    public static final List<String> BANED_NODES = Arrays.asList("Ctx", "TypeIgnores", "DecoratorList", "Defaults",
+            "Ifs", "KwDefaults", "Kwonlyargs", "Posonlyargs", "Load", "Store", "Keywords", Const.ANNOTATION, "Elts");
 
 
 }

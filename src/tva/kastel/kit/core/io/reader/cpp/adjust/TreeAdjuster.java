@@ -1,5 +1,6 @@
 package tva.kastel.kit.core.io.reader.cpp.adjust;
 
+import tva.kastel.kit.core.model.impl.AttributeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 
@@ -122,4 +123,49 @@ public abstract class TreeAdjuster {
         node.getAttributes().get(0).getAttributeValues().set(0, new StringValueImpl(value));
         node.getAttributes().get(0).setAttributeKey(Const.OPERATOR_BIG);
     }
+
+    /**
+     * this method renames a Node to their literal equivalent (int, double, ..)
+     * @param node the node that will be adjusted
+     * @param value the value of the literal (e.g integer value, double value, ..)
+     */
+    protected void adjustLiteralNode(Node node, String value) {
+        if (value.matches(Const.REGEX_INT)) {
+            node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.INT)));
+            node.setNodeType(Const.INT_LIT);
+        } else if (value.equals(Const.TRUE) || value.equals(Const.FALSE)) {
+            node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.BOOLEAN)));
+            node.setNodeType(Const.BOOLEAN_LIT);
+        } else if (value.matches(Const.REGEX_DOUBLE)) {
+            node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.DOUBLE)));
+            node.setNodeType(Const.DOUBLE_LIT);
+        } else if (value.matches(Const.REGEX_FLOAT)) {
+            node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.FLOAT)));
+            node.setNodeType(Const.FLOAT_LIT);
+        } else {
+            node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.STRING)));
+            node.setNodeType(Const.STRING_LIT);
+        }
+        node.getAttributes().get(0).setAttributeKey(Const.VALUE);
+    }
+
+
+    protected String getOperatorFromNodeType(String nodeType) {
+        return switch (nodeType) {
+            case "Add", "UAdd" -> Const.PLUS;
+            case "Div" -> Const.DIVIDE;
+            case "Mult" -> Const.MULTIPLY;
+            case "Sub", "USub" -> Const.MINUS;
+            case "Eq" -> Const.EQUALS;
+            case "NotEq" -> Const.NOT_EQUALS;
+            case "Gt" -> Const.GREATER;
+            case "GtE" -> Const.GREATER_EQUALS;
+            case "Lt" -> Const.LESS;
+            case "LtE" -> Const.LESS_EQUALS;
+            case "Not" -> Const.LOGICAL_COMP;
+            case "Invert" -> Const.BITWISE_COMP;
+            default -> nodeType;
+        };
+    }
+
 }

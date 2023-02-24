@@ -114,6 +114,9 @@ public interface Node {
      */
     public List<Node> getNodesOfType(String nodeType);
 
+    /**
+     * This method adds a child node to the current node  and sets the parent.
+     */
     public void addChildWithParent(Node child);
 
     /**
@@ -287,7 +290,19 @@ public interface Node {
      */
     public void updateParent(Node parent);
 
-
+    /**
+     * This method returns the size of a node.
+     *
+     * @@return size is the number of all children under this node + 1
+     */
     public int getSize();
+
+    /**
+     * This method adds value for a given key and  value.
+     *
+     * @param attributeKey the name of the key
+     * @param value        the name of the value
+     */
+    public void addAttribute(String attributeKey, String value);
 
 }

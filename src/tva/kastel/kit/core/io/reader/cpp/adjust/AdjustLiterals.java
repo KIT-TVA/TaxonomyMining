@@ -75,23 +75,7 @@ public class AdjustLiterals extends TreeAdjuster {
             if (value == null) {
                 return;
             }
-            if (value.matches(Const.REGEX_INT)) {
-                node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.INT)));
-                node.setNodeType(Const.INT_LIT);
-            } else if (value.equals(Const.TRUE) || value.equals(Const.FALSE)) {
-                node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.BOOLEAN)));
-                node.setNodeType(Const.BOOLEAN_LIT);
-            } else if (value.matches(Const.REGEX_DOUBLE)) {
-                node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.DOUBLE)));
-                node.setNodeType(Const.DOUBLE_LIT);
-            } else if (value.matches(Const.REGEX_FLOAT)) {
-                node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.FLOAT)));
-                node.setNodeType(Const.FLOAT_LIT);
-            } else {
-                node.addAttribute(new AttributeImpl(Const.TYPE_BIG, new StringValueImpl(Const.STRING)));
-                node.setNodeType(Const.STRING_LIT);
-            }
-            node.getAttributes().get(0).setAttributeKey(Const.VALUE);
+            adjustLiteralNode(node, value);
         }
 
     }

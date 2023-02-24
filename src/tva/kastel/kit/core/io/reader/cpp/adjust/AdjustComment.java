@@ -1,6 +1,7 @@
 package tva.kastel.kit.core.io.reader.cpp.adjust;
 
 import tva.kastel.kit.core.model.impl.AttributeImpl;
+import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Node;
 
@@ -22,16 +23,12 @@ public class AdjustComment extends TreeAdjuster {
                 node.cut();
                 return;
             }
-            try {
-                node.cut();
-            } catch (ArrayIndexOutOfBoundsException e) {
-                return; // node already has been cut
-            }
             String[] arr = value.split(Const.SLASH_TWICE);
-            for (int i = 0; i < arr.length; i++) {
-                value = arr[i];
+            for (String s : arr) {
+                value = s;
             }
-            parent.addAttribute(new AttributeImpl(Const.COMMENT_BIG, new StringValueImpl(value)));
+            node.getAttributes().clear();
+            node.addAttribute(new AttributeImpl(Const.COMMENT_BIG, new StringValueImpl(value)));
 
         }
     }

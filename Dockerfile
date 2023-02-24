@@ -25,7 +25,7 @@ RUN wget https://download2.gluonhq.com/openjfx/19.0.2.1/openjfx-19.0.2.1_linux-x
     && rm openjfx-19.0.2.1_linux-x64_bin-sdk.zip  \
     && mv javafx-sdk-19.0.2.1 /opt/
 
-RUN python3 -m pip install 'scikit-learn==1.1.3' 'numpy==1.23.4' 'jep==4.1.0' 'graphviz==0.20.1'
+RUN python3 -m pip install 'scikit-learn==1.1.3' 'numpy==1.23.4' 'jep==4.1.0' 'graphviz==0.20.1' 'ast2json'
 
 WORKDIR /root/taxonomymining
 

@@ -3,8 +3,10 @@ package tva.kastel.kit.core.io.reader;
 
 import com.google.common.io.Files;
 import tva.kastel.kit.core.io.reader.cpp.SrcMLReader;
+import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
 import tva.kastel.kit.core.io.reader.gson.GsonImportService;
 import tva.kastel.kit.core.io.reader.java.JavaReader;
+import tva.kastel.kit.core.io.reader.python.python_reader.PythonFileReader;
 import tva.kastel.kit.core.model.enums.NodeType;
 import tva.kastel.kit.core.model.impl.NodeImpl;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
@@ -72,8 +74,10 @@ public class ReaderManager {
             ArtifactReader reader = null;
             if (Files.getFileExtension(fte.getName()).equals("java")) {
                 reader = new JavaReader();
-            } else if (Files.getFileExtension(fte.getName()).equals("cpp")) {
+            } else if (Files.getFileExtension(fte.getName()).equals(Const.CPP)) {
                 reader = new SrcMLReader();
+            }else if (Files.getFileExtension(fte.getName()).equals(Const.PY)) {
+                reader = new PythonFileReader();
             } else if (Files.getFileExtension(fte.getName()).equals("tree")) {
                 try {
                     return importService.importTree(java.nio.file.Files.readString(fte.toPath())).getRoot();

@@ -28,7 +28,7 @@ public class AdjustArray extends TreeAdjuster {
                 int i = -1;
                 try {
                     i = parent.getParent().getParent().cut();
-                } catch (ArrayIndexOutOfBoundsException e) {
+                } catch (IndexOutOfBoundsException e) {
                     return; // node already has been cut
                 }
                 Node realParent = parent.getParent().getParent().getParent();
