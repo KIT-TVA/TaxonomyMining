@@ -53,7 +53,7 @@ public class TaxonomyWriter {
 
 
             for (DendrogramNode node : taxonomy.getAllNodes()) {
-                File nodeFile = Paths.get(directoryPath, node.getTree().toString() + ".tree").toFile();
+                File nodeFile = Paths.get(directoryPath, node.getTree().getTreeName() + ".tree").toFile();
                 fileWriter = new FileWriter(nodeFile);
                 printWriter = new PrintWriter(fileWriter);
 
@@ -99,29 +99,34 @@ public class TaxonomyWriter {
 
         List<Refinement> refinementList = taxonomy.getAllRefinements();
 
-        for (Refinement refinement : refinementList) {
+        if (refinementList.isEmpty()) {
 
-            Node start = null;
-            if (nodeMap.containsKey(refinement.getStart().toString())) {
-                start = nodeMap.get(refinement.getStart().toString());
+            graph = graph.with(Factory.node(taxonomy.getRootNode().getTree().getTreeName()));
 
-            } else {
-                start = Factory.node(refinement.getStart().toString() + "\n" + refinement.getStart().getTree().getSize());
-                nodeMap.put(refinement.getStart().toString(), start);
+        } else {
+            for (Refinement refinement : refinementList) {
+
+                Node start = null;
+                if (nodeMap.containsKey(refinement.getStart().toString())) {
+                    start = nodeMap.get(refinement.getStart().toString());
+
+                } else {
+                    start = Factory.node(refinement.getStart().toString());
+                    nodeMap.put(refinement.getStart().toString(), start);
+                }
+
+                Node end = null;
+                if (nodeMap.containsKey(refinement.getEnd().toString())) {
+                    end = nodeMap.get(refinement.getEnd().toString());
+
+                } else {
+                    end = Factory.node(refinement.getEnd().toString());
+                    nodeMap.put(refinement.getEnd().toString(), end);
+                }
+
+                graph = graph.with(start.link(Factory.to(end).with(Label.of(refinement.getName()))));
+
             }
-
-            Node end = null;
-            if (nodeMap.containsKey(refinement.getEnd().toString())) {
-                end = nodeMap.get(refinement.getEnd().toString());
-
-            } else {
-                end = Factory.node(refinement.getEnd().toString() + "\n" + refinement.getEnd().getTree().getSize());
-                nodeMap.put(refinement.getEnd().toString(), end);
-            }
-
-
-            graph = graph.with(start.link(Factory.to(end).with(Label.of(refinement.getName() + "\n" + refinement.getTree().getSize()))));
-
         }
 
 

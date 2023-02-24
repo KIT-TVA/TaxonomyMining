@@ -7,6 +7,7 @@ import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
 
 
+import java.sql.Ref;
 import java.util.*;
 
 
@@ -20,6 +21,7 @@ public class TaxonomyMiner {
     }
 
     public Taxonomy mine(List<Tree> variants) {
+        Refinement.refinementCounter = 0;
         DendrogramNode rootNode = clusterEngine.calculateDendrogram(variants);
         rootNode.computeRefinements();
         alignRefinements(rootNode);
@@ -66,13 +68,21 @@ public class TaxonomyMiner {
                 parent.removeRefinement(child);
                 parent.getChildren().addAll(child.getChildren());
                 for (DendrogramNode subChild : child.getChildren()) {
-                    parent.addRefinement(subChild, child.getRefinement(subChild));
+                    Refinement subRefinement = child.getRefinement(subChild);
+                    subRefinement.setStart(parent);
+                    parent.addRefinement(subChild, subRefinement);
                 }
-                parent.getTree().setTreeName(child.getTree().getTreeName());
+
+
+                if (!parent.isAbstract() && !child.isAbstract()) {
+                    parent.getTree().setTreeName(parent.getTree().getTreeName() + " ~ " + child.getTree().getTreeName());
+                } else {
+                    parent.getTree().setTreeName(child.getTree().getTreeName());
+                }
+                parent.setAbstract(child.isAbstract());
 
             }
         }
-
     }
 
 

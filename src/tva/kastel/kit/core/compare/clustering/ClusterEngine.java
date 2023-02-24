@@ -1,6 +1,7 @@
 package tva.kastel.kit.core.compare.clustering;
 
 
+import org.apache.commons.lang3.time.StopWatch;
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
 import tva.kastel.kit.core.compare.comparison.impl.NodeComparisonFactory;
 import tva.kastel.kit.core.compare.comparison.impl.VariationComparisonFactory;
@@ -12,6 +13,7 @@ import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class ClusterEngine {
 

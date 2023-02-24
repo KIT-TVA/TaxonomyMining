@@ -20,7 +20,7 @@ public class DendrogramNode {
         this.children.addAll(Arrays.asList(children));
         this.height = height;
         this.refinementMap = new HashMap<>();
-
+        this.isAbstract = children.length != 0;
 
     }
 
@@ -53,6 +53,15 @@ public class DendrogramNode {
         this.height = height;
     }
 
+    private boolean isAbstract;
+
+    public boolean isAbstract() {
+        return isAbstract;
+    }
+
+    public void setAbstract(boolean anAbstract) {
+        isAbstract = anAbstract;
+    }
 
     @Override
     public String toString() {

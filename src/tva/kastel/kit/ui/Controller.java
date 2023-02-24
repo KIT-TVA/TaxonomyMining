@@ -4,6 +4,8 @@ import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -19,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import org.apache.commons.lang3.time.StopWatch;
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
 import tva.kastel.kit.core.compare.matcher.SortingMatcher;
 import tva.kastel.kit.core.compare.metric.MetricImpl;
@@ -42,6 +45,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 public class Controller implements Initializable {
@@ -50,8 +54,6 @@ public class Controller implements Initializable {
     @FXML
     private TreeView<FileWrapper> explorerTree;
 
-    @FXML
-    private AnchorPane anchorPane;
 
     @FXML
     private TreeView<Node> familyModelTree;
@@ -62,17 +64,17 @@ public class Controller implements Initializable {
     @FXML
     private Button compareButton;
 
+
     @FXML
     private Canvas canvas;
+
 
     @FXML
     private TabPane tabPane;
 
-    @FXML
-    private Tab taxonomyTab;
 
     @FXML
-    private Tab familyModelTab;
+    private Tab taxonomyTab;
 
     private final ReaderManager readerManager;
 
@@ -100,6 +102,7 @@ public class Controller implements Initializable {
 
 
     }
+
 
     private void addFileToBrowserRecursively(TreeItem<FileWrapper> treeItem) {
 
@@ -271,8 +274,6 @@ public class Controller implements Initializable {
             TreeItem<FileWrapper> selectedFile = explorerTree.getSelectionModel().getSelectedItem();
             Tree tree = readerManager.readFile(selectedFile.getValue().getFile());
             createFamilyModelTree(tree);
-
-
         }
 
 
@@ -358,7 +359,10 @@ public class Controller implements Initializable {
         }
         Collections.sort(files);
         for (File file : files) {
+
+
             trees.add(readerManager.readFile(file));
+
         }
         return trees;
     }
