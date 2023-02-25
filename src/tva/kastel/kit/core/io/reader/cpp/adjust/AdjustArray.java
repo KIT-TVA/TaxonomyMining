@@ -50,7 +50,7 @@ public class AdjustArray extends TreeAdjuster {
                 }
                 try {
                     addArrayAccessExpr(node, parent.getParent(), parent.cut());
-                } catch (ArrayIndexOutOfBoundsException e) {
+                } catch (IndexOutOfBoundsException e) {
                     return; // node already has been cut
                 }
             }
