@@ -50,30 +50,26 @@ public abstract class AbstractJavaVisitor implements VoidVisitor<Node> {
     }
 
     private List<com.github.javaparser.ast.Node> getReorderedNodes(com.github.javaparser.ast.Node parent) {
-        int[] arr = new int[parent.getChildNodes().size()];
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = getLine(parent.getChildNodes().get(i));
-        }
-        Arrays.sort(arr);
 
         List<com.github.javaparser.ast.Node> list = new ArrayList<>();
-        for (int v : arr) {
-            for (com.github.javaparser.ast.Node child : parent.getChildNodes()) {
-                if (v == getLine(child)) {
-                    list.add(child);
+        list.addAll(parent.getChildNodes());
+        Collections.sort(list, new Comparator<>() {
+            @Override
+            public int compare(com.github.javaparser.ast.Node o1, com.github.javaparser.ast.Node o2) {
+                if (o1.getRange().get().begin.line > o2.getRange().get().begin.line) {
+                    return 1;
+                } else if (o1.getRange().get().begin.line < o2.getRange().get().begin.line) {
+                    return -1;
+                } else {
+                    return Integer.compare(o1.getRange().get().begin.column, o2.getRange().get().begin.column);
                 }
+
+
             }
-        }
+        });
         return list;
     }
 
-    private int getLine(com.github.javaparser.ast.Node node) {
-        String line = node.getRange().toString();
-        String[] a1 = line.split("\\(line ");
-        String[] a2 = a1[1].split(Const.COMMA);
-
-        return Integer.parseInt(a2[0]);
-    }
 
     private void addComment(Node node, String comment) {
         Node lineComment = new NodeImpl(Const.LINE_COMMENT);
