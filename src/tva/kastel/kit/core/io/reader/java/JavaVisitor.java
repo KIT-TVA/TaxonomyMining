@@ -258,7 +258,20 @@ public class JavaVisitor extends AbstractJavaVisitor {
 
     @Override
     public void visit(LocalRecordDeclarationStmt n, Node arg) {
+        //TODO: implement
+        throw new RuntimeException("not implement");
+    }
 
+    @Override
+    public void visit(RecordDeclaration n, Node arg) {
+        //TODO: implement
+        throw new RuntimeException("not implement");
+    }
+
+    @Override
+    public void visit(CompactConstructorDeclaration n, Node arg) {
+        //TODO: implement
+        throw new RuntimeException("not implement");
     }
 
     @Override
@@ -387,15 +400,7 @@ public class JavaVisitor extends AbstractJavaVisitor {
         arg.addAttribute(JavaAttributesTypes.Type.name(), new StringValueImpl(n.toString()));
     }
 
-    @Override
-    public void visit(RecordDeclaration n, Node arg) {
 
-    }
-
-    @Override
-    public void visit(CompactConstructorDeclaration n, Node arg) {
-
-    }
 
     @Override
     public void visit(ReceiverParameter n, Node arg) {
