@@ -31,7 +31,14 @@ public class ReaderManager {
 
     private GsonImportService importService;
 
+    private ReaderConfiguration readerConfiguration;
+
     public ReaderManager() {
+        this(new ReaderConfiguration());
+    }
+
+    public ReaderManager(ReaderConfiguration readerConfiguration) {
+        this.readerConfiguration = readerConfiguration;
         importService = new GsonImportService();
     }
 
@@ -49,10 +56,10 @@ public class ReaderManager {
 
         return trees;
     }
-    
+
 
     public Tree readFile(File fte) {
-        Tree tree = new TreeImpl(fte.getName(), readFileRecursivly(null, fte));
+        Tree tree = new TreeImpl(fte.getName(), readFileRecursively(null, fte));
         if (fte.isDirectory()) {
             tree.setFileExtension("DIRECTORY");
         } else {
@@ -62,23 +69,32 @@ public class ReaderManager {
         return tree;
     }
 
-    private Node readFileRecursivly(Node parentNode, File fte) {
+    private Node readFileRecursively(Node parentNode, File fte) {
+
+        if (!checkConfiguration(fte)) {
+            return null;
+        }
+
         if (fte.isDirectory()) {
             Node nextNode = new NodeImpl(NodeType.DIRECTORY);
             nextNode.addAttribute("DIRECTORY_NAME", new StringValueImpl(fte.getName()));
 
-            Arrays.stream(fte.listFiles()).forEach(childFte -> nextNode.addChildWithParent(readFileRecursivly(nextNode, childFte)));
+            for (File childFte : fte.listFiles()) {
+                Node childNode = readFileRecursively(nextNode, childFte);
+                if (childNode != null) {
+                    nextNode.addChildWithParent(childNode);
+                }
+            }
             return nextNode;
         } else {
-
             ArtifactReader reader = null;
-            if (Files.getFileExtension(fte.getName()).equals("java")) {
+            if (Files.getFileExtension(fte.getName()).equals(ReaderTypes.JAVA)) {
                 reader = new JavaReader();
-            } else if (Files.getFileExtension(fte.getName()).equals(Const.CPP)) {
+            } else if (Files.getFileExtension(fte.getName()).equals(ReaderTypes.CPP)) {
                 reader = new SrcMLReader();
-            }else if (Files.getFileExtension(fte.getName()).equals(Const.PY)) {
+            } else if (Files.getFileExtension(fte.getName()).equals(ReaderTypes.PY)) {
                 reader = new PythonFileReader();
-            } else if (Files.getFileExtension(fte.getName()).equals("tree")) {
+            } else if (Files.getFileExtension(fte.getName()).equals(ReaderTypes.TREE)) {
                 try {
                     return importService.importTree(java.nio.file.Files.readString(fte.toPath())).getRoot();
                 } catch (IOException e) {
@@ -97,4 +113,11 @@ public class ReaderManager {
         }
     }
 
+
+    private boolean checkConfiguration(File file) {
+        if (file.isFile()) {
+            return readerConfiguration.getFileTypes().size() == 0 || readerConfiguration.getFileTypes().contains(Files.getFileExtension(file.getName()));
+        }
+        return true;
+    }
 }

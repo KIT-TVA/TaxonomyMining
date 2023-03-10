@@ -121,7 +121,6 @@ public class ClusterEngine {
     }
 
     public List<Set<Tree>> cluster(List<Tree> trees, double threshold) {
-
         DendrogramNode root = calculateDendrogram(trees, false);
         List<DendrogramNode> nodesBelowThreshold = getNodesBelowThreshold(root, threshold);
         List<Set<Tree>> clusters = new ArrayList<>();
@@ -178,6 +177,9 @@ public class ClusterEngine {
                 Tree tree1 = trees.get(i);
                 Tree tree2 = trees.get(j);
 
+                System.out.println("Comparing " + tree1.getTreeName() + " " + tree2.getTreeName());
+
+
                 if (i == j) {
                     matrix[i][j] = 0.0f;
                 } else {
@@ -188,8 +190,7 @@ public class ClusterEngine {
                         similarity = 0;
                     } else {
                         Comparison<Node> comparison = compareEngine.compare(tree1, tree2);
-                        JaccardSimilarity jaccardSimilarity = new JaccardSimilarity();
-                        similarity = jaccardSimilarity.calculateSimilarity(comparison);
+                        similarity = JaccardSimilarity.calculateSimilarity(comparison);
                     }
 
                     double distance = 1 - similarity;

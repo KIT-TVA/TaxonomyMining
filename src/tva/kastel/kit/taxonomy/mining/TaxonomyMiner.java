@@ -1,8 +1,14 @@
 package tva.kastel.kit.taxonomy.mining;
 
+import tva.kastel.kit.core.compare.CompareEngineHierarchical;
 import tva.kastel.kit.core.compare.clustering.ClusterEngine;
 import tva.kastel.kit.core.compare.clustering.DendrogramNode;
 import tva.kastel.kit.core.compare.clustering.Refinement;
+import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
+import tva.kastel.kit.core.compare.comparison.similarity.JaccardSimilarity;
+import tva.kastel.kit.core.compare.matcher.SortingMatcher;
+import tva.kastel.kit.core.compare.metric.MetricImpl;
+import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
 
@@ -15,9 +21,13 @@ public class TaxonomyMiner {
 
     private final ClusterEngine clusterEngine;
 
+    private final CompareEngineHierarchical compareEngine;
+
 
     public TaxonomyMiner() {
         this.clusterEngine = new ClusterEngine();
+        this.compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""));
+
     }
 
     public Taxonomy mine(List<Tree> variants) {
@@ -26,6 +36,7 @@ public class TaxonomyMiner {
         rootNode.computeRefinements();
         alignRefinements(rootNode);
         uplift(rootNode);
+        updateRefinementNames(rootNode);
         return new Taxonomy(rootNode);
     }
 
@@ -85,5 +96,60 @@ public class TaxonomyMiner {
         }
     }
 
+    private void updateRefinementNames(DendrogramNode rootNode) {
+        List<Refinement> refinements = rootNode.getAllRefinements();
+
+        Map<String, List<Refinement>> refinementMap = new HashMap<>();
+
+        for (Refinement refinement : refinements) {
+
+            if (!refinementMap.containsKey(refinement.getName())) {
+                refinementMap.put(refinement.getName(), new ArrayList<>());
+            }
+            refinementMap.get(refinement.getName()).add(refinement);
+        }
+
+
+        int count = 0;
+
+        for (Map.Entry<String, List<Refinement>> entry : refinementMap.entrySet()) {
+
+            String refinementName = "Refinement_" + count;
+            for (Refinement refinement : entry.getValue()) {
+                refinement.setName(refinementName);
+            }
+            count++;
+        }
+    }
+
+    public void identify(Taxonomy taxonomy, Tree tree) {
+        DendrogramNode target = identify(taxonomy.getRootNode(), tree);
+        System.out.println("Tree " + tree.getTreeName() + " belongs to class " + target.getTree().getTreeName());
+    }
+
+
+    private DendrogramNode identify(DendrogramNode currentNode, Tree tree) {
+
+
+        Comparison<Node> comparison = compareEngine.compare(currentNode.getTree(), tree);
+        double currentNodeSimilarity = JaccardSimilarity.calculateSimilarity(comparison);
+
+        double maxSimilarity = Double.MIN_VALUE;
+        DendrogramNode target = null;
+        for (DendrogramNode child : currentNode.getChildren()) {
+            comparison = compareEngine.compare(child.getTree(), tree);
+            double similarity = JaccardSimilarity.calculateSimilarity(comparison);
+
+            if (similarity > maxSimilarity) {
+                maxSimilarity = similarity;
+                target = child;
+            }
+        }
+
+        if (currentNodeSimilarity > maxSimilarity) {
+            return currentNode;
+        }
+        return identify(target, tree);
+    }
 
 }

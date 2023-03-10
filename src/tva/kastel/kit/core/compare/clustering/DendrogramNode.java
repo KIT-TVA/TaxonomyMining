@@ -103,6 +103,11 @@ public class DendrogramNode {
 
     }
 
+    public void addChild(DendrogramNode child) {
+        this.children.add(child);
+        refinementMap.put(child, new Refinement(this, child));
+    }
+
 
     public List<Refinement> getAllRefinements() {
         List<Refinement> refinements = new ArrayList<>();

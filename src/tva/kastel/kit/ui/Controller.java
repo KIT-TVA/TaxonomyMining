@@ -25,7 +25,9 @@ import org.apache.commons.lang3.time.StopWatch;
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
 import tva.kastel.kit.core.compare.matcher.SortingMatcher;
 import tva.kastel.kit.core.compare.metric.MetricImpl;
+import tva.kastel.kit.core.io.reader.ReaderConfiguration;
 import tva.kastel.kit.core.io.reader.ReaderManager;
+import tva.kastel.kit.core.io.reader.ReaderTypes;
 import tva.kastel.kit.core.io.writer.dimacs.DimacsWriter;
 import tva.kastel.kit.core.io.writer.gson.GsonExportService;
 import tva.kastel.kit.core.io.writer.taxonomy.TaxonomyWriter;
@@ -40,8 +42,7 @@ import tva.kastel.kit.ui.util.FileTable;
 import tva.kastel.kit.ui.util.FileWrapper;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
@@ -52,8 +53,12 @@ public class Controller implements Initializable {
     @FXML
     public Button taxonomizeButton;
     @FXML
+    public Button identifyButton;
+    @FXML
     private TreeView<FileWrapper> explorerTree;
 
+    @FXML
+    private TextArea consoleTextArea;
 
     @FXML
     private TreeView<Node> familyModelTree;
@@ -83,9 +88,11 @@ public class Controller implements Initializable {
 
     private final TaxonomyMiner taxonomyMiner;
 
+    private Taxonomy taxonomy;
+
 
     public Controller() {
-        readerManager = new ReaderManager();
+        readerManager = new ReaderManager(new ReaderConfiguration(ReaderTypes.CPP, ReaderTypes.JAVA, ReaderTypes.PY));
         compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""));
         taxonomyWriter = new TaxonomyWriter(new GsonExportService(), new DimacsWriter());
         taxonomyMiner = new TaxonomyMiner();
@@ -219,6 +226,7 @@ public class Controller implements Initializable {
         explorerTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             compareButton.setDisable(explorerTree.getSelectionModel().getSelectedIndices().size() < 2);
             taxonomizeButton.setDisable(explorerTree.getSelectionModel().getSelectedIndices().size() < 2);
+            identifyButton.setDisable(explorerTree.getSelectionModel().getSelectedIndices().size() != 1 || taxonomy == null);
 
         });
 
@@ -226,6 +234,7 @@ public class Controller implements Initializable {
         explorerTree.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         compareButton.setDisable(true);
         taxonomizeButton.setDisable(true);
+        identifyButton.setDisable(true);
 
 
         ContextMenu contextMenu = new ContextMenu();
@@ -265,6 +274,18 @@ public class Controller implements Initializable {
         contextMenu.getItems().add(openInExplorerItem);
         explorerTree.setContextMenu(contextMenu);
 
+
+        OutputStream stream = new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                consoleTextArea.appendText(String.valueOf((char) b));
+                consoleTextArea.positionCaret(consoleTextArea.getText().length());
+            }
+        };
+
+        System.setOut(new PrintStream(stream));
+
+
     }
 
 
@@ -279,12 +300,18 @@ public class Controller implements Initializable {
 
     }
 
+    public void identify() {
+        Tree selectedItem = readerManager.readFile(explorerTree.getSelectionModel().getSelectedItem().getValue().getFile());
+        taxonomyMiner.identify(taxonomy, selectedItem);
+        drawTaxonomy();
+    }
+
 
     public void createTaxonomy() {
 
         List<Tree> trees = getSelectedFiles();
 
-        Taxonomy taxonomy = taxonomyMiner.mine(trees);
+        taxonomy = taxonomyMiner.mine(trees);
 
         TreeItem<FileWrapper> rootItem = explorerTree.getRoot();
 
@@ -323,9 +350,13 @@ public class Controller implements Initializable {
             innerTaxonomyFolderItem.getChildren().add(item);
         }
 
+        drawTaxonomy();
+
+    }
+
+    private void drawTaxonomy() {
         tabPane.getSelectionModel().select(taxonomyTab);
         try {
-
             Graph graph = taxonomyWriter.plot(taxonomy);
             BufferedImage bufferedImage = Graphviz.fromGraph(graph).render(Format.SVG).toImage();
 
@@ -337,14 +368,12 @@ public class Controller implements Initializable {
             canvas.setHeight(image.getHeight());
             canvas.setWidth(image.getWidth());
 
-
             context.drawImage(image, 0, 0, image.getWidth(), image.getHeight());
 
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 

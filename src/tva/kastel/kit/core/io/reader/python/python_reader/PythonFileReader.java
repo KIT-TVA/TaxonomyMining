@@ -11,6 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import tva.kastel.kit.core.io.reader.AbstractArtifactReader;
+import tva.kastel.kit.core.io.reader.ReaderTypes;
 import tva.kastel.kit.core.io.reader.cpp.adjust.Const;
 import tva.kastel.kit.core.io.reader.python.python_adjust.PAdjustAll;
 import tva.kastel.kit.core.io.reader.python.python_adjust.RenamerPython;
@@ -26,7 +27,7 @@ import tva.kastel.kit.core.model.interfaces.Tree;
  */
 public class PythonFileReader extends AbstractArtifactReader {
 
-    public static String[] SUPPORTED_FILE_ENDINGS = {Const.PY};
+    public static String[] SUPPORTED_FILE_ENDINGS = {ReaderTypes.PY};
 
     private final FileToTreeReader fileToTree;
 

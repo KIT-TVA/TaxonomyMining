@@ -1,5 +1,6 @@
 package tva.kastel.kit.core.io.writer.taxonomy;
 
+import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -114,6 +115,8 @@ public class TaxonomyWriter {
                     start = Factory.node(refinement.getStart().toString());
                     nodeMap.put(refinement.getStart().toString(), start);
                 }
+                start = setNodeColor(start, refinement.getStart().isAbstract());
+
 
                 Node end = null;
                 if (nodeMap.containsKey(refinement.getEnd().toString())) {
@@ -123,6 +126,7 @@ public class TaxonomyWriter {
                     end = Factory.node(refinement.getEnd().toString());
                     nodeMap.put(refinement.getEnd().toString(), end);
                 }
+                end = setNodeColor(end, refinement.getEnd().isAbstract());
 
                 graph = graph.with(start.link(Factory.to(end).with(Label.of(refinement.getName()))));
 
@@ -133,6 +137,14 @@ public class TaxonomyWriter {
         return graph;
 
 
+    }
+
+    private Node setNodeColor(Node node, boolean isAbstract) {
+        if (isAbstract) {
+            return node.with(Color.BLUE1);
+        } else {
+            return node.with(Color.RED1);
+        }
     }
 
 }

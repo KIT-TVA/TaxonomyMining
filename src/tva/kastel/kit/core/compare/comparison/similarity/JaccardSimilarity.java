@@ -1,7 +1,6 @@
 package tva.kastel.kit.core.compare.comparison.similarity;
 
 import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
-import tva.kastel.kit.core.compare.comparison.interfaces.Similarity;
 import tva.kastel.kit.core.compare.comparison.util.ComparisonUtil;
 import tva.kastel.kit.core.model.impl.StringValueImpl;
 import tva.kastel.kit.core.model.interfaces.Attribute;
@@ -11,9 +10,9 @@ import tva.kastel.kit.core.model.interfaces.Value;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JaccardSimilarity implements Similarity {
-    @Override
-    public double calculateSimilarity(Comparison<Node> comparison) {
+public class JaccardSimilarity {
+
+    public static double calculateSimilarity(Comparison<Node> comparison) {
         int leftSize = comparison.getLeftArtifact() != null ? comparison.getLeftArtifact().getSize() : 0;
         int rightSize = comparison.getRightArtifact() != null ? comparison.getRightArtifact().getSize() : 0;
 
@@ -26,7 +25,7 @@ public class JaccardSimilarity implements Similarity {
         return ((double) (intersection)) / (leftSize + rightSize - intersection);
     }
 
-    public int countIntersectingNodes(Comparison<Node> comparison) {
+    public static int countIntersectingNodes(Comparison<Node> comparison) {
 
         int nodes = 0;
 
@@ -53,7 +52,7 @@ public class JaccardSimilarity implements Similarity {
         return nodes;
     }
 
-    private boolean hasAtLeastOneExactAttribute(Comparison<Node> comparison) {
+    private static boolean hasAtLeastOneExactAttribute(Comparison<Node> comparison) {
         for (Attribute leftAttr : comparison.getLeftArtifact().getAttributes()) {
             for (Attribute rightAttr : comparison.getRightArtifact().getAttributes()) {
                 // same attr type
@@ -68,7 +67,7 @@ public class JaccardSimilarity implements Similarity {
         return false;
     }
 
-    private List<Value> getCommonValues(Attribute attribute1, Attribute attribute2) {
+    private static List<Value> getCommonValues(Attribute attribute1, Attribute attribute2) {
         List<Value> commonValues = new ArrayList<>();
 
         for (Value firstValue : attribute1.getAttributeValues()) {

@@ -10,9 +10,7 @@ import java.util.List;
  */
 public class Const {
     public static final String C_PLUS_PLUS = "CPP";
-    public static final String PY = "py";
     public static final String PYTHON = "Python";
-    public static final String CPP = "cpp";
     public static final String IS_INTERFACE = "IsInterface";
     public static final String ACCESS_MODIFIER = "AccessModifier";
 
