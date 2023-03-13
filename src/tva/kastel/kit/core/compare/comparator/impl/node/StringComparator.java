@@ -36,7 +36,22 @@ public class StringComparator extends AbstractNodeComparator {
         double similarity = maxAttributes > 0 ? sum(similarities) / maxAttributes : 1f;
         // add keyValueRatio as base similarity because this node are of the same type
         similarity = similarity * (1.0f - keyValueRatio) + keyValueRatio;
+
+        addOptionalAttributes(firstNode, similarities);
+        addOptionalAttributes(secondNode, similarities);
+
         return new NodeResultElement(this, similarity, similarities);
+    }
+
+    private void addOptionalAttributes(Node node, Map<String, Double> similarities) {
+
+        for (Attribute attribute : node.getAttributes()) {
+            if (!similarities.containsKey(attribute.getAttributeKey())) {
+                similarities.put(attribute.getAttributeKey(), 0.0);
+            }
+        }
+
+
     }
 
     /**

@@ -6,6 +6,8 @@ import tva.kastel.kit.core.model.interfaces.AbstractNode;
 import tva.kastel.kit.core.model.interfaces.Attribute;
 import tva.kastel.kit.core.model.interfaces.Node;
 
+import java.util.List;
+
 /**
  * The concrete implementation of the Node interface.
  *
@@ -105,12 +107,15 @@ public class NodeImpl extends AbstractNode {
 
         newNode.setVariabilityClass(getVariabilityClass());
 
-        for (Attribute attribute : getAttributes()) {
+     
+        List<Attribute> attributes = getAttributes();
+        for (Attribute attribute : attributes) {
             Attribute newAttribute = new AttributeImpl(attribute.getAttributeKey(), attribute.getAttributeValues());
-            newNode.addAttribute(newAttribute);
+            newNode.getAttributes().add(newAttribute);
         }
 
-        for (Node child : getChildren()) {
+        List<Node> children = getChildren();
+        for (Node child : children) {
             newNode.addChildWithParent(child.cloneNode());
         }
 

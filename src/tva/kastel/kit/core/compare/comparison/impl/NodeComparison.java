@@ -124,6 +124,7 @@ public class NodeComparison extends AbstractComparison<Node> {
             // iteration it should stay as optional
             return getLeftArtifact();
         } else {
+
             getLeftArtifact().setVariabilityClass(ComparisonUtil.getClassForSimilarity(getSimilarity()));
             // first merge attributes
             Set<Attribute> containedAttrs = new HashSet<Attribute>();
@@ -149,6 +150,7 @@ public class NodeComparison extends AbstractComparison<Node> {
             // put all other attributes from right to left because it wasn't contained
             // before
             getRightArtifact().getAttributes().addAll(allAttrs);
+            getLeftArtifact().getAttributes().addAll(allAttrs);
 
             // process child comparisons recursively
             getLeftArtifact().getChildren().clear();

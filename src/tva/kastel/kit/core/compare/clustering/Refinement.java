@@ -1,6 +1,7 @@
 package tva.kastel.kit.core.compare.clustering;
 
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
+import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
 import tva.kastel.kit.core.compare.matcher.SortingMatcher;
 import tva.kastel.kit.core.compare.metric.MetricImpl;
 import tva.kastel.kit.core.model.enums.VariabilityClass;
@@ -78,6 +79,8 @@ public class Refinement {
             clone1.getRoot().getAttributes().clear();
             clone2.getRoot().getAttributes().clear();
         }
+
+        Comparison<Node> co = compareEngine.compare(clone1, clone2);
 
         Tree refinementTree = compareEngine.compareMerge(clone1, clone2);
 

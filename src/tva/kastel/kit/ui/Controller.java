@@ -92,7 +92,7 @@ public class Controller implements Initializable {
 
 
     public Controller() {
-        readerManager = new ReaderManager(new ReaderConfiguration(ReaderTypes.CPP, ReaderTypes.JAVA, ReaderTypes.PY));
+        readerManager = new ReaderManager(new ReaderConfiguration(ReaderTypes.TREE, ReaderTypes.CPP, ReaderTypes.JAVA, ReaderTypes.PY));
         compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""));
         taxonomyWriter = new TaxonomyWriter(new GsonExportService(), new DimacsWriter());
         taxonomyMiner = new TaxonomyMiner();

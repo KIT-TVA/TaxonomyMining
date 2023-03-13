@@ -79,6 +79,7 @@ public class VariationComparison extends NodeComparison {
 
         if (getLeftArtifact() != null && getRightArtifact() != null) {
 
+
             if (hasAtLeastOneExactAttribute() || (getLeftArtifact().isRoot() && getRightArtifact().isRoot())) {
                 getLeftArtifact().setVariabilityClass(VariabilityClass.MANDATORY);
 

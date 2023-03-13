@@ -40,12 +40,12 @@ public class JaccardSimilarity {
         } else if (comparison.getLeftArtifact() != null && comparison.getRightArtifact() != null) {
 
             if (hasAtLeastOneExactAttribute(comparison) || (comparison.getLeftArtifact().isRoot() && comparison.getRightArtifact().isRoot())) {
-                nodes += 1;
                 for (Comparison<Node> childComparison : comparison.getChildComparisons()) {
                     nodes += countIntersectingNodes(childComparison);
                 }
 
             }
+
 
         }
 

@@ -191,6 +191,8 @@ public class ClusterEngine {
                     } else {
                         Comparison<Node> comparison = compareEngine.compare(tree1, tree2);
                         similarity = JaccardSimilarity.calculateSimilarity(comparison);
+
+
                     }
 
                     double distance = 1 - similarity;
