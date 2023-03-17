@@ -23,6 +23,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.apache.commons.lang3.time.StopWatch;
 import tva.kastel.kit.core.compare.CompareEngineHierarchical;
+import tva.kastel.kit.core.compare.comparison.interfaces.Comparison;
+import tva.kastel.kit.core.compare.comparison.similarity.JaccardSimilarity;
 import tva.kastel.kit.core.compare.matcher.SortingMatcher;
 import tva.kastel.kit.core.compare.metric.MetricImpl;
 import tva.kastel.kit.core.io.reader.ReaderConfiguration;
@@ -398,6 +400,18 @@ public class Controller implements Initializable {
 
 
     public void compare() {
+
+        List<Tree> selectedFiles = getSelectedFiles();
+
+        for (int i = 0; i < selectedFiles.size(); i++) {
+            for (int j = i + 1; j < selectedFiles.size(); j++) {
+                Comparison<Node> comparison = compareEngine.compare(selectedFiles.get(i), selectedFiles.get(j));
+                double similarity = JaccardSimilarity.calculateSimilarity(comparison);
+                System.out.println("Comparing " + selectedFiles.get(i).getTreeName() + " " + selectedFiles.get(j).getTreeName() + " : " + similarity);
+            }
+        }
+
+
         Tree tree = compareEngine.compareMerge(getSelectedFiles());
         createFamilyModelTree(tree);
     }

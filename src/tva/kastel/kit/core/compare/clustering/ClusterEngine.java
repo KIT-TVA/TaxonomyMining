@@ -28,13 +28,20 @@ public class ClusterEngine {
 
         CompareEngineHierarchical compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""), new VariationComparisonFactory());
 
-        Map<Integer, DendrogramNode> map = new HashMap<>();
+        ArrayList<DendrogramNode> map = new ArrayList<>();
 
         for (int i = 0; i < trees.size(); i++) {
-            map.put(i, new DendrogramNode(trees.get(i), 0));
+            map.add(new DendrogramNode(trees.get(i), 0));
         }
 
+
         double[][] distanceMatrix = calculateDistanceMatrix(trees);
+
+        int[] clusterMap = new int[distanceMatrix.length];
+
+        for (int i = 0; i < distanceMatrix.length; i++) {
+            clusterMap[i] = 1;
+        }
 
 
         do {
@@ -55,25 +62,39 @@ public class ClusterEngine {
 
 
             double[][] updatedDistanceMatrix = new double[distanceMatrix.length][distanceMatrix[0].length];
-
+            int nodeISize = clusterMap[lowestIndexI];
+            int nodeJSize = clusterMap[lowestIndexJ];
 
             for (int i = 0; i < distanceMatrix.length; i++) {
                 for (int j = i; j < distanceMatrix[0].length; j++) {
-
-                    if ((i == j)) {
+                    if (i == j) {
                         updatedDistanceMatrix[i][j] = 0;
-                        updatedDistanceMatrix[j][i] = 0;
-                    } else if (i == lowestIndexJ) {
-                        updatedDistanceMatrix[i][j] = (distanceMatrix[i][j] + distanceMatrix[j][lowestIndexI]) / 2;
-                        updatedDistanceMatrix[j][i] = updatedDistanceMatrix[i][j];
-                    } else if (i == lowestIndexI) {
-                        updatedDistanceMatrix[i][j] = (distanceMatrix[i][j] + distanceMatrix[j][lowestIndexJ]) / 2;
-                        updatedDistanceMatrix[j][i] = updatedDistanceMatrix[i][j];
+                    } else if (i == lowestIndexI || j == lowestIndexJ) {
+                        if (i == lowestIndexI && j == lowestIndexJ) {
+                            updatedDistanceMatrix[i][j] = 0;
+                        } else if (i == lowestIndexI) {
+                            //updatedDistanceMatrix[i][j] = (distanceMatrix[i][j] + distanceMatrix[j][lowestIndexJ])/ (2);
+                            updatedDistanceMatrix[i][j] = (nodeISize * distanceMatrix[i][j] + nodeJSize * distanceMatrix[j][lowestIndexJ]) / (nodeISize + nodeJSize);
+                        } else {
+                            // updatedDistanceMatrix[i][j] = (distanceMatrix[i][j] + distanceMatrix[i][lowestIndexI])/2;
+                            updatedDistanceMatrix[i][j] = (nodeISize * distanceMatrix[i][j] + nodeJSize * distanceMatrix[i][lowestIndexI]) / ((nodeISize + nodeJSize));
+                        }
+                    } else if (i == lowestIndexJ || j == lowestIndexI) {
+
+                        if (i == lowestIndexJ && j == lowestIndexI) {
+                            updatedDistanceMatrix[i][j] = 0;
+                        } else if (i == lowestIndexJ) {
+                            // updatedDistanceMatrix[i][j] = (distanceMatrix[i][j] + distanceMatrix[lowestIndexI][j])/2;
+                            updatedDistanceMatrix[i][j] = (nodeISize * distanceMatrix[i][j] + nodeJSize * distanceMatrix[lowestIndexI][j]) / (nodeISize + nodeJSize);
+                        } else {
+                            //updatedDistanceMatrix[i][j] = (distanceMatrix[i][j] + distanceMatrix[lowestIndexJ][i])/2;
+                            updatedDistanceMatrix[i][j] = (nodeISize * distanceMatrix[i][j] + nodeJSize * distanceMatrix[lowestIndexJ][i]) / (nodeISize + nodeJSize);
+                        }
                     } else {
                         updatedDistanceMatrix[i][j] = distanceMatrix[i][j];
-                        updatedDistanceMatrix[j][i] = updatedDistanceMatrix[i][j];
-
                     }
+                    updatedDistanceMatrix[j][i] = updatedDistanceMatrix[i][j];
+
                 }
             }
 
@@ -85,32 +106,46 @@ public class ClusterEngine {
                 Tree mergedTree = compareEngine.compareMerge(node1.getTree().cloneTree(), node2.getTree().cloneTree());
                 mergedTree.setTreeName("Abstraction_" + abstractionCounter);
                 abstractionCounter++;
-                parent = new DendrogramNode(mergedTree, updatedDistanceMatrix[lowestIndexI][lowestIndexJ], node1, node2);
+                parent = new DendrogramNode(mergedTree, lowestDistance, node1, node2);
             } else {
-                parent = new DendrogramNode(updatedDistanceMatrix[lowestIndexI][lowestIndexJ], node1, node2);
+
+                if (node1.getTree() == null || node2.getTree() == null) {
+                    System.out.println();
+                }
+
+                parent = new DendrogramNode(lowestDistance, node1, node2);
             }
 
-            map.replace(lowestIndexJ, parent);
-            List<DendrogramNode> nodes = map.values().stream().toList();
-            map.clear();
-            List<DendrogramNode> newNodes = new ArrayList<>();
-            newNodes.addAll(nodes.subList(0, lowestIndexI));
-            newNodes.addAll(nodes.subList(lowestIndexI + 1, nodes.size()));
-            for (int i = 0; i < newNodes.size(); i++) {
-                map.put(i, newNodes.get(i));
-            }
-
+            map.remove(lowestIndexI);
+            map.add(lowestIndexI, parent);
+            map.remove(lowestIndexJ);
 
             double[][] reducedDistanceMatrix = new double[updatedDistanceMatrix.length - 1][updatedDistanceMatrix[0].length - 1];
             int k = 0;
             for (int i = 0; i < updatedDistanceMatrix.length - 1; i++, k++) {
-
-                if (i == lowestIndexI) {
+                if (i == lowestIndexJ) {
                     k++;
                 }
-                System.arraycopy(updatedDistanceMatrix[k], 0, reducedDistanceMatrix[i], 0, lowestIndexI);
-                System.arraycopy(updatedDistanceMatrix[k], lowestIndexI + 1, reducedDistanceMatrix[i], lowestIndexI, updatedDistanceMatrix[k].length - 1 - lowestIndexI);
+                System.arraycopy(updatedDistanceMatrix[k], 0, reducedDistanceMatrix[i], 0, lowestIndexJ);
+                System.arraycopy(updatedDistanceMatrix[k], lowestIndexJ + 1, reducedDistanceMatrix[i], lowestIndexJ, updatedDistanceMatrix[k].length - 1 - lowestIndexJ);
             }
+
+            int[] newClusterMap = new int[reducedDistanceMatrix.length];
+
+            int r = 0;
+            for (int i = 0; i < newClusterMap.length; i++, r++) {
+
+                if (i == lowestIndexI) {
+                    newClusterMap[i] = clusterMap[r] + clusterMap[lowestIndexJ];
+                } else if (i == lowestIndexJ) {
+                    r++;
+                    newClusterMap[i] = clusterMap[r];
+                } else {
+                    newClusterMap[i] = clusterMap[r];
+                }
+            }
+
+            clusterMap = newClusterMap;
 
             distanceMatrix = reducedDistanceMatrix;
 
@@ -191,8 +226,6 @@ public class ClusterEngine {
                     } else {
                         Comparison<Node> comparison = compareEngine.compare(tree1, tree2);
                         similarity = JaccardSimilarity.calculateSimilarity(comparison);
-
-
                     }
 
                     double distance = 1 - similarity;

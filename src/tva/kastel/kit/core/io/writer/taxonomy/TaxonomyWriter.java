@@ -112,7 +112,7 @@ public class TaxonomyWriter {
                     start = nodeMap.get(refinement.getStart().toString());
 
                 } else {
-                    start = Factory.node(refinement.getStart().toString());
+                    start = Factory.node(refinement.getStart().toString() + "\n" + String.format("%.04f", 1 - refinement.getStart().getHeight()));
                     nodeMap.put(refinement.getStart().toString(), start);
                 }
                 start = setNodeColor(start, refinement.getStart().isAbstract());
@@ -123,7 +123,7 @@ public class TaxonomyWriter {
                     end = nodeMap.get(refinement.getEnd().toString());
 
                 } else {
-                    end = Factory.node(refinement.getEnd().toString());
+                    end = Factory.node(refinement.getEnd().toString() + "\n" + String.format("%.04f", 1 - refinement.getEnd().getHeight()));
                     nodeMap.put(refinement.getEnd().toString(), end);
                 }
                 end = setNodeColor(end, refinement.getEnd().isAbstract());

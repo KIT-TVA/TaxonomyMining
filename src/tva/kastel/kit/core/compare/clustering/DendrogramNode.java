@@ -95,6 +95,10 @@ public class DendrogramNode {
         return nodes;
     }
 
+    public int getSize() {
+        return getAllChildren().size() - 1;
+    }
+
     public void computeRefinements() {
         for (DendrogramNode child : this.children) {
             refinementMap.put(child, new Refinement(this, child));

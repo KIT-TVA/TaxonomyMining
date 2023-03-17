@@ -12,8 +12,6 @@ import tva.kastel.kit.core.model.interfaces.Node;
 import tva.kastel.kit.core.model.interfaces.Tree;
 import tva.kastel.kit.taxonomy.model.Taxonomy;
 
-
-import java.sql.Ref;
 import java.util.*;
 
 
@@ -51,6 +49,7 @@ public class TaxonomyMiner {
             refinementTreeMap.put(refinement.getTree(), refinement);
         }
 
+
         List<Set<Tree>> clusters = clusterEngine.cluster(refinementTreeMap.keySet().stream().toList(), 0.0);
 
         for (Set<Tree> cluster : clusters) {
@@ -60,11 +59,13 @@ public class TaxonomyMiner {
             refinementMap.put(baseRefinement, baseRefinement);
             while (iterator.hasNext()) {
                 Tree tree = iterator.next();
-                refinementTreeMap.get(tree).setTree(baseTree);
-                refinementTreeMap.get(tree).setName(baseRefinement.getName());
+                Refinement refinement = refinementTreeMap.get(tree);
+                refinement.setTree(baseTree);
+                refinement.setName(baseRefinement.getName());
             }
         }
     }
+
 
     private void uplift(DendrogramNode rootNode) {
         List<Refinement> refinements = rootNode.getAllRefinements();

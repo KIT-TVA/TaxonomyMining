@@ -36,10 +36,10 @@ public class Refinement {
     }
 
     public Refinement(DendrogramNode start, DendrogramNode end) {
+        this.name = "Refinement_" + refinementCounter;
         this.tree = getRefinementTree(start, end);
         this.start = start;
         this.end = end;
-        this.name = "Refinement_" + refinementCounter;
         refinementCounter++;
     }
 
@@ -91,6 +91,9 @@ public class Refinement {
         } else {
             setNodesMandatory(refinementTree.getRoot());
         }
+
+        refinementTree.setTreeName(name);
+
         return refinementTree;
     }
 
