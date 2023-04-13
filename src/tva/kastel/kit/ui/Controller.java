@@ -326,15 +326,7 @@ public class Controller implements Initializable {
         }
 
 
-        int count = 0;
-        for (TreeItem<FileWrapper> item : taxonomyFolderItem.getChildren()) {
-            if (item.getValue().getFile().getName().equals("Taxonomy_" + count)) {
-                count++;
-            } else {
-                break;
-            }
-        }
-
+        int count = taxonomyFolderItem.getChildren().size();
         File innerTaxonomyFolder = Paths.get(taxonomyFolderItem.getValue().getFile().getAbsolutePath(), "Taxonomy_" + count).toFile();
         innerTaxonomyFolder.mkdir();
         TreeItem<FileWrapper> innerTaxonomyFolderItem = new TreeItem<>();

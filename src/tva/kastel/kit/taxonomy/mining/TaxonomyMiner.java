@@ -35,6 +35,7 @@ public class TaxonomyMiner {
         alignRefinements(rootNode);
         uplift(rootNode);
         updateRefinementNames(rootNode);
+        updateAbstractionNames(rootNode);
         return new Taxonomy(rootNode);
     }
 
@@ -75,7 +76,6 @@ public class TaxonomyMiner {
             if (refinement.getTree().getRoot() == null) {
                 DendrogramNode parent = refinement.getStart();
                 DendrogramNode child = refinement.getEnd();
-
                 parent.getChildren().remove(child);
                 parent.removeRefinement(child);
                 parent.getChildren().addAll(child.getChildren());
@@ -123,15 +123,43 @@ public class TaxonomyMiner {
         }
     }
 
+    public void updateAbstractionNames(DendrogramNode rootNode) {
+
+        int counter = 0;
+        for (DendrogramNode node : rootNode.getAllChildren()) {
+            if (node.isAbstract()) {
+                node.getTree().setTreeName("Abstraction_" + counter);
+                counter++;
+            }
+        }
+
+
+    }
+
     public void identify(Taxonomy taxonomy, Tree tree) {
-        DendrogramNode target = identify(taxonomy.getRootNode(), tree);
-        System.out.println("Tree " + tree.getTreeName() + " belongs to class " + target.getTree().getTreeName());
+
+        List<DendrogramNode> nodes = taxonomy.getAllNodes();
+        double maxSim = Double.MIN_VALUE;
+
+        DendrogramNode target = null;
+        for (DendrogramNode node : nodes) {
+            Comparison<Node> comparison = compareEngine.compare(node.getTree(), tree);
+            double similarity = JaccardSimilarity.calculateSimilarity(comparison);
+
+            if (similarity > maxSim) {
+                maxSim = similarity;
+                target = node;
+            }
+
+            System.out.println("Tree " + tree.getTreeName() + " comparing " + node.getTree().getTreeName() + " (Similarity: " + similarity + ")");
+
+        }
+
+        System.out.println("Tree " + tree.getTreeName() + " belongs to class " + target.getTree().getTreeName() + " (Similarity: " + maxSim + ")");
     }
 
 
     private DendrogramNode identify(DendrogramNode currentNode, Tree tree) {
-
-
         Comparison<Node> comparison = compareEngine.compare(currentNode.getTree(), tree);
         double currentNodeSimilarity = JaccardSimilarity.calculateSimilarity(comparison);
 
@@ -152,5 +180,6 @@ public class TaxonomyMiner {
         }
         return identify(target, tree);
     }
+
 
 }
