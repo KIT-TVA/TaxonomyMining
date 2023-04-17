@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature manual="selected" name="GameOfLife"/>
+	<feature manual="unselected" name="Composed"/>
+	<feature manual="unselected" name="UndoRedoGenerator"/>
+	<feature manual="unselected" name="UndoRedoTest"/>
+	<feature manual="unselected" name="UndoRedoGuiBase"/>
+	<feature manual="unselected" name="Options"/>
+	<feature manual="unselected" name="UndoRedo"/>
+	<feature manual="unselected" name="Test"/>
+	<feature manual="unselected" name="Generator"/>
+	<feature manual="unselected" name="GeneratorSelection"/>
+	<feature manual="unselected" name="DefaultGenerator"/>
+	<feature manual="unselected" name="RandomDefaultGenerator"/>
+	<feature manual="unselected" name="FormDefaultGenerator"/>
+	<feature manual="unselected" name="ConcretGenerator"/>
+	<feature manual="unselected" name="RandomGenerator"/>
+	<feature manual="unselected" name="FormGenerator"/>
+	<feature manual="unselected" name="AbstractGenerator"/>
+	<feature manual="unselected" name="IO"/>
+	<feature manual="unselected" name="PopUpMenu"/>
+	<feature manual="selected" name="View"/>
+	<feature manual="selected" name="GuiBase"/>
+	<feature manual="selected" name="Model"/>
+	<feature manual="selected" name="ModelBase"/>
+</configuration>

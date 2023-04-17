@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature manual="selected" name="StackSPL"/>
+	<feature manual="selected" name="Functions"/>
+	<feature manual="unselected" name="LOGGING"/>
+	<feature manual="unselected" name="UNDO"/>
+	<feature manual="selected" name="LOCKING"/>
+	<feature manual="selected" name="OS"/>
+	<feature manual="unselected" name="UNIX"/>
+	<feature manual="selected" name="WIN"/>
+</configuration>

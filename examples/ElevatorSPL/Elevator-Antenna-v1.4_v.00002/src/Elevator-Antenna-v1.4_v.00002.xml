@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature manual="selected" name="Elevator"/>
+	<feature manual="selected" name="Behavior"/>
+	<feature manual="selected" name="Modes"/>
+	<feature manual="unselected" name="Sabbath"/>
+	<feature manual="unselected" name="FIFO"/>
+	<feature manual="selected" name="ShortestPath"/>
+	<feature manual="selected" name="Service"/>
+	<feature manual="unselected" name="Priorities"/>
+	<feature manual="unselected" name="RushHour"/>
+	<feature manual="unselected" name="FloorPriority"/>
+	<feature manual="unselected" name="PersonPriority"/>
+	<feature manual="unselected" name="VoiceOutput"/>
+	<feature manual="selected" name="CallButtons"/>
+	<feature manual="selected" name="DirectedCall"/>
+	<feature manual="unselected" name="UndirectedCall"/>
+	<feature manual="unselected" name="Security"/>
+	<feature manual="unselected" name="Permission"/>
+	<feature manual="unselected" name="FloorPermission"/>
+	<feature manual="unselected" name="PermissionControl"/>
+	<feature manual="unselected" name="Safety"/>
+	<feature manual="unselected" name="Overloaded"/>
+</configuration>
