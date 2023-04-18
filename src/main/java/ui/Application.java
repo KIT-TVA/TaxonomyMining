@@ -15,6 +15,7 @@ public class Application extends javafx.application.Application {
         Scene scene = new Scene(fxmlLoader.load(), 1000, 1000);
         stage.setTitle("Taxonomy Mining");
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 

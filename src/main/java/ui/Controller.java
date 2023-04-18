@@ -387,18 +387,6 @@ public class Controller implements Initializable {
 
 
     public void compare() {
-
-        List<Tree> selectedFiles = getSelectedFiles();
-
-        for (int i = 0; i < selectedFiles.size(); i++) {
-            for (int j = i + 1; j < selectedFiles.size(); j++) {
-                Comparison<Node> comparison = compareEngine.compare(selectedFiles.get(i), selectedFiles.get(j));
-                double similarity = JaccardSimilarity.calculateSimilarity(comparison);
-                System.out.println("Comparing " + selectedFiles.get(i).getTreeName() + " " + selectedFiles.get(j).getTreeName() + " : " + similarity);
-            }
-        }
-
-
         Tree tree = compareEngine.compareMerge(getSelectedFiles());
         createFamilyModelTree(tree);
     }

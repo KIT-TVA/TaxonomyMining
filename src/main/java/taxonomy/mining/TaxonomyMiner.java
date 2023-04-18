@@ -151,11 +151,9 @@ public class TaxonomyMiner {
                 target = node;
             }
 
-            System.out.println("Tree " + tree.getTreeName() + " comparing " + node.getTree().getTreeName() + " (Similarity: " + similarity + ")");
-
         }
 
-        System.out.println("Tree " + tree.getTreeName() + " belongs to class " + target.getTree().getTreeName() + " (Similarity: " + maxSim + ")");
+        System.out.println("Tree " + tree.getTreeName() + " belongs to class " + target.getTree().getTreeName() + " (Similarity: " + String.format("%.04f", maxSim) + ")");
     }
 
 

@@ -22,7 +22,7 @@ public class ClusterEngine {
 
     private DendrogramNode calculateDendrogram(List<Tree> trees, boolean createAbstractions) {
 
-        int abstractionCounter = 0;
+        int abstractionCounter = 1;
 
         CompareEngineHierarchical compareEngine = new CompareEngineHierarchical(new SortingMatcher(), new MetricImpl(""), new VariationComparisonFactory());
 
@@ -106,11 +106,6 @@ public class ClusterEngine {
                 abstractionCounter++;
                 parent = new DendrogramNode(mergedTree, lowestDistance, node1, node2);
             } else {
-
-                if (node1.getTree() == null || node2.getTree() == null) {
-                    System.out.println();
-                }
-
                 parent = new DendrogramNode(lowestDistance, node1, node2);
             }
 
