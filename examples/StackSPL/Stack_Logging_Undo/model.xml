@@ -17,21 +17,6 @@
 				<feature name="UNDO"/>
 				<feature name="LOCKING"/>
 			</or>
-			<alt abstract="true" name="OS">
-				<feature name="UNIX"/>
-				<feature name="WIN"/>
-			</alt>
 		</and>
 	</struct>
-	<constraints>
-		<rule>
-			<eq>
-				<var>LOCKING</var>
-				<disj>
-					<var>UNIX</var>
-					<var>WIN</var>
-				</disj>
-			</eq>
-		</rule>
-	</constraints>
 </featureModel>

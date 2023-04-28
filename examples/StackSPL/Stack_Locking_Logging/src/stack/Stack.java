@@ -5,17 +5,13 @@ class Stack {
 	int size; 
 	Object[] data;
 	void push (Object o) {	
-		rememberValue();
+		Lock lock = lock();
+		if(lock == null) {	
+			log("lock failed: " + o);	
+		}		
 		data[size++] = o;
 }
 	void log(String msg) {/*..*/}
 
-	boolean undo() {
-		restoreValue();
-		log("undone.");
- 	return true;
-	}
-	void rememberValue() {/*..*/}
-	void restoreValue() {/*..*/}
 	void clean () {/*..*/}
 }

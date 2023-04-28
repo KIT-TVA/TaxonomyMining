@@ -5,14 +5,20 @@ class Stack {
 	int size; 
 	Object[] data;
 	void push (Object o) {	
+		Lock lock = lock();
+		if(lock == null) {	
+		}		
 		rememberValue();
 		data[size++] = o;
 }
-	void log(String msg) {/*..*/}
 
 	boolean undo() {
+		Lock lock = lock();
+		if(lock == null) {
+			return false;
+		}	
 		restoreValue();
-		log("undone.");
+     clean();
  	return true;
 	}
 	void rememberValue() {/*..*/}

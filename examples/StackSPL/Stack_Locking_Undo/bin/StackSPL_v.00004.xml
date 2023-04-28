@@ -4,5 +4,5 @@
 	<feature manual="selected" name="Functions"/>
 	<feature manual="unselected" name="LOGGING"/>
 	<feature manual="selected" name="UNDO"/>
-	<feature manual="unselected" name="LOCKING"/>
+	<feature manual="selected" name="LOCKING"/>
 </configuration>
