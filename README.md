@@ -29,12 +29,12 @@ to build and package the application. To run the application, use the following 
 and jep:
 
 ```
-java -p /opt/javafx-sdk-19.0.2.1/lib --add-modules=javafx.controls,javafx.fxml -Djava.library.path=/usr/local/lib/python3.11/dist-packages/jep -jar TaxonomyMining.jar
+java -p /opt/javafx-sdk-19.0.2.1/lib --add-modules=javafx.controls,javafx.fxml -Djava.library.path=/usr/local/lib/python3.11/dist-packages/jep -jar target/TaxonomyMining.jar
 ```
 
 ## Example usage
 
-In the folder *example*, we provide three exemplary SPLs that we also used for evaluation. To generate the taxonomy
+In the folder *example*, we provide four exemplary SPLs that we also used for evaluation. To generate the taxonomy
 graph, the SPLs must be copied to the folder *mining_data/input* located in the user directory. Then, restart the
 application, select all variant folders of a particular SPL (e.g. Stack/Stack_Logging) and click on *Taxonomize*. The
 taxonomy graph is then visualized in the *Taxonomy* tab pane. Note that the matching of refinements and feature presence
